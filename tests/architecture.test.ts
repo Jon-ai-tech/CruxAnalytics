@@ -3,7 +3,7 @@
  * Tests the modular architecture components
  */
 
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 import { calculateOFI, calculateTFDI, calculateSER } from '../lib/business-logic/business-intelligence';
 import { calculateFinancialMetricsXAI, ROIStrategy, NPVStrategy } from '../lib/business-logic/financial-core';
 import { businessIntelligence } from '../lib/business-logic/index';
