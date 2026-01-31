@@ -1,10 +1,34 @@
-import { trpc } from '@/lib/trpc';
+import { createTRPCClient, httpBatchLink } from '@trpc/client';
+import superjson from 'superjson';
+import type { AppRouter } from '@/server/routers';
 import type { ProjectData, ScenarioSnapshot } from '@/types/project';
 import { eventEmitter, Events } from '@/lib/event-emitter';
+import { getApiBaseUrl } from '@/constants/oauth';
+import * as Auth from '@/lib/_core/auth';
+
+// Create vanilla tRPC client for use outside React components
+const vanillaClient = createTRPCClient<AppRouter>({
+  links: [
+    httpBatchLink({
+      url: `${getApiBaseUrl()}/api/trpc`,
+      transformer: superjson,
+      async headers() {
+        const token = await Auth.getSessionToken();
+        return token ? { Authorization: `Bearer ${token}` } : {};
+      },
+      fetch(url, options) {
+        return fetch(url, {
+          ...options,
+          credentials: 'include',
+        });
+      },
+    }),
+  ],
+});
 
 export async function getAllProjects(): Promise<ProjectData[]> {
   try {
-    const projects = await trpc.projects.list.query();
+    const projects = await vanillaClient.projects.list.query();
     return projects.map(mapDbProjectToProjectData);
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -14,7 +38,7 @@ export async function getAllProjects(): Promise<ProjectData[]> {
 
 export async function getProject(id: string): Promise<ProjectData | null> {
   try {
-    const project = await trpc.projects.get.query({ id });
+    const project = await vanillaClient.projects.get.query({ id });
     return mapDbProjectToProjectData(project);
   } catch (error) {
     console.error('Error fetching project:', error);
@@ -26,14 +50,14 @@ export async function saveProject(project: ProjectData): Promise<void> {
   try {
     if (project.id && !project.id.startsWith('project-') && isValidUUID(project.id)) {
       // Update existing
-      await trpc.projects.update.mutate({
+      await vanillaClient.projects.update.mutate({
         id: project.id,
         data: mapProjectDataToDbProject(project),
       });
       eventEmitter.emit(Events.PROJECT_UPDATED, project);
     } else {
       // Create new
-      const { id } = await trpc.projects.create.mutate(mapProjectDataToDbProject(project));
+      const { id } = await vanillaClient.projects.create.mutate(mapProjectDataToDbProject(project));
       eventEmitter.emit(Events.PROJECT_CREATED, { ...project, id });
     }
   } catch (error) {
@@ -47,7 +71,7 @@ export async function updateProject(
   updates: Partial<Omit<ProjectData, 'id' | 'createdAt'>>
 ): Promise<ProjectData | null> {
   try {
-    await trpc.projects.update.mutate({
+    await vanillaClient.projects.update.mutate({
       id,
       data: mapProjectDataToDbProject(updates as ProjectData),
     });
@@ -66,7 +90,7 @@ export async function updateProject(
 
 export async function deleteProject(id: string): Promise<void> {
   try {
-    await trpc.projects.delete.mutate({ id });
+    await vanillaClient.projects.delete.mutate({ id });
     eventEmitter.emit(Events.PROJECT_DELETED, id);
   } catch (error) {
     console.error('Error deleting project:', error);
@@ -76,7 +100,7 @@ export async function deleteProject(id: string): Promise<void> {
 
 export async function duplicateProject(id: string): Promise<ProjectData | null> {
   try {
-    const { id: newId } = await trpc.projects.duplicate.mutate({ id });
+    const { id: newId } = await vanillaClient.projects.duplicate.mutate({ id });
     eventEmitter.emit(Events.PROJECT_DUPLICATED, newId);
     
     // Fetch the duplicated project
@@ -89,7 +113,7 @@ export async function duplicateProject(id: string): Promise<ProjectData | null> 
 
 export async function getAllScenarios(projectId: string): Promise<ScenarioSnapshot[]> {
   try {
-    const scenarios = await trpc.projects.scenarios.list.query({ projectId });
+    const scenarios = await vanillaClient.projects.scenarios.list.query({ projectId });
     return scenarios.map(mapDbScenarioToSnapshot);
   } catch (error) {
     console.error('Error fetching scenarios:', error);
@@ -102,7 +126,7 @@ export async function saveScenarioSnapshot(
   snapshot: Omit<ScenarioSnapshot, 'id' | 'createdAt'>
 ): Promise<void> {
   try {
-    await trpc.projects.scenarios.create.mutate({
+    await vanillaClient.projects.scenarios.create.mutate({
       projectId,
       name: snapshot.name,
       salesAdjustment: snapshot.salesAdjustment,
@@ -123,7 +147,7 @@ export async function deleteScenario(
   scenarioId: string
 ): Promise<void> {
   try {
-    await trpc.projects.scenarios.delete.mutate({ id: scenarioId });
+    await vanillaClient.projects.scenarios.delete.mutate({ id: scenarioId });
     eventEmitter.emit(Events.SNAPSHOT_DELETED, scenarioId);
   } catch (error) {
     console.error('Error deleting scenario:', error);
