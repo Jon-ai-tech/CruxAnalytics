@@ -1,5 +1,9 @@
 import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
+// Export projects and scenarios from shared schema
+export { projects, scenarios } from "../shared/db/schema";
+export type { Project, InsertProject, Scenario, InsertScenario, FinancialResults } from "../shared/db/schema";
+
 /**
  * Core user table backing auth flow.
  * Extend this file with additional tables as your product grows.
