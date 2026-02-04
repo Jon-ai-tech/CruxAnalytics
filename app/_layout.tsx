@@ -1,6 +1,6 @@
 import "@/global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Stack, useRouter } from "expo-router";
+import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as Notifications from 'expo-notifications';
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -37,7 +37,7 @@ export default function RootLayout() {
 
   const [insets, setInsets] = useState<EdgeInsets>(initialInsets);
   const [frame, setFrame] = useState<Rect>(initialFrame);
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [, setFontsLoaded] = useState(false);
 
   // Initialize Manus runtime for cookie injection from parent container
   useEffect(() => {

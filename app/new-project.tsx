@@ -43,7 +43,7 @@ export default function NewProjectScreen() {
   const [maintenanceCosts, setMaintenanceCosts] = useState('');
   const [loading, setLoading] = useState(false);
   const [showTemplateSelector, setShowTemplateSelector] = useState(true);
-  const [useWizard, setUseWizard] = useState(true);
+  const [useWizard] = useState(true);
   const [reminderFrequency, setReminderFrequency] = useState<ReminderFrequency>('monthly');
   const [notificationsAvailable, setNotificationsAvailable] = useState(false);
 
@@ -108,23 +108,6 @@ export default function NewProjectScreen() {
     };
     loadDraftData();
   }, [t]);
-
-  const handleSelectTemplate = (template: ProjectTemplate) => {
-    if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    }
-    
-    // Apply template data to form
-    if (template.id !== 'blank') {
-      setInitialInvestment(template.data.initialInvestment.toString());
-      setYearlyRevenue(template.data.yearlyRevenue.toString());
-      setOperatingCosts((template.data.monthlyCosts * 12).toString());
-      setProjectDuration(template.data.projectDuration.toString());
-      setDiscountRate(template.data.discountRate.toString());
-    }
-    
-    setShowTemplateSelector(false);
-  };
 
   // Wizard validation functions
   const validateStep1 = () => {
