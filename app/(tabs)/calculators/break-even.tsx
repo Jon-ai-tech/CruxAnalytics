@@ -14,6 +14,7 @@ import {
     Badge,
 } from '@/components/landing/shared-components';
 import { BreakEvenCalculator } from '@/lib/infrastructure/calculators/BreakEvenCalculator';
+import { useTranslation } from '@/lib/i18n-context';
 
 // ============================================
 // INPUT FIELD COMPONENT
@@ -113,13 +114,14 @@ function BreakEvenChart({
     variableCost: number;
     fixedCosts: number;
 }) {
+    const { t } = useTranslation();
     const maxUnits = Math.max(breakEvenUnits * 1.5, currentUnits || 0);
     const breakEvenPercent = (breakEvenUnits / maxUnits) * 100;
     const currentPercent = currentUnits ? (currentUnits / maxUnits) * 100 : null;
 
     return (
         <GlassCard>
-            <Text className="text-white font-semibold mb-4">Visualización</Text>
+            <Text className="text-white font-semibold mb-4">{t('calculator.break_even.visualization')}</Text>
 
             {/* Chart Bar */}
             <View className="h-8 bg-slate-800 rounded-full overflow-hidden relative">
@@ -172,9 +174,10 @@ function BreakEvenChart({
 // RECOMMENDATIONS COMPONENT
 // ============================================
 function Recommendations({ items }: { items: string[] }) {
+    const { t } = useTranslation();
     return (
         <GlassCard>
-            <Text className="text-white font-semibold mb-4">💡 Recomendaciones</Text>
+            <Text className="text-white font-semibold mb-4">{t('calculator.recommendations')}</Text>
             <View className="gap-3">
                 {items.map((item, index) => (
                     <View key={index} className="flex-row gap-3">
@@ -193,6 +196,7 @@ function Recommendations({ items }: { items: string[] }) {
 // MAIN PAGE
 // ============================================
 export default function BreakEvenPage() {
+    const { t } = useTranslation();
     const [fixedCosts, setFixedCosts] = useState('10000');
     const [pricePerUnit, setPricePerUnit] = useState('50');
     const [variableCost, setVariableCost] = useState('25');
@@ -231,8 +235,8 @@ export default function BreakEvenPage() {
         >
             <View className="max-w-5xl mx-auto">
             <SectionHeading
-                title="📈 Punto de Equilibrio"
-                subtitle="Descubre cuántas unidades necesitas vender para no perder dinero"
+                title={t('calculator.break_even.title')}
+                subtitle={t('calculator.break_even.subtitle')}
             />
 
             <View className="flex-row flex-wrap gap-6">
@@ -240,39 +244,39 @@ export default function BreakEvenPage() {
                 <View className="flex-1 min-w-[300px]">
                     <GlassCard>
                         <Text className="text-white font-semibold text-lg mb-6">
-                            Ingresa tus datos
+                            {t('calculator.enter_data')}
                         </Text>
 
                         <InputField
-                            label="Costos fijos mensuales"
+                            label={t('calculator.break_even.fixed_costs')}
                             value={fixedCosts}
                             onChange={setFixedCosts}
                             prefix="$"
-                            hint="Renta, salarios, servicios, etc."
+                            hint={t('calculator.break_even.fixed_costs_hint')}
                         />
 
                         <InputField
-                            label="Precio por unidad"
+                            label={t('calculator.break_even.unit_price')}
                             value={pricePerUnit}
                             onChange={setPricePerUnit}
                             prefix="$"
-                            hint="Lo que cobra por cada producto/servicio"
+                            hint={t('calculator.break_even.unit_price_hint')}
                         />
 
                         <InputField
-                            label="Costo variable por unidad"
+                            label={t('calculator.break_even.variable_cost')}
                             value={variableCost}
                             onChange={setVariableCost}
                             prefix="$"
-                            hint="Materiales, comisiones, envío, etc."
+                            hint={t('calculator.break_even.variable_cost_hint')}
                         />
 
                         <InputField
-                            label="Ventas actuales (opcional)"
+                            label={t('calculator.break_even.current_sales')}
                             value={currentSales}
                             onChange={setCurrentSales}
                             suffix="unidades"
-                            hint="Para calcular tu margen de seguridad"
+                            hint={t('calculator.break_even.current_sales_hint')}
                         />
                     </GlassCard>
                 </View>
@@ -284,7 +288,7 @@ export default function BreakEvenPage() {
                             {/* Main Results */}
                             <View className="flex-row flex-wrap gap-4">
                                 <ResultCard
-                                    label="Punto de Equilibrio (Unidades)"
+                                    label={t('calculator.break_even.break_even_units')}
                                     value={result.breakEvenUnits.toLocaleString()}
                                     icon="🎯"
                                     color="indigo"
@@ -292,14 +296,14 @@ export default function BreakEvenPage() {
                                 />
 
                                 <ResultCard
-                                    label="Punto de Equilibrio (Ingresos)"
+                                    label={t('calculator.break_even.break_even_revenue')}
                                     value={`$${result.breakEvenRevenue.toLocaleString()}`}
                                     icon="💰"
                                     color="emerald"
                                 />
 
                                 <ResultCard
-                                    label="Contribución por Unidad"
+                                    label={t('calculator.break_even.contribution_margin')}
                                     value={result.contributionMarginPerUnit != null ? `$${result.contributionMarginPerUnit.toFixed(2)}` : '$0.00'}
                                     icon="📊"
                                     color="amber"
@@ -313,10 +317,10 @@ export default function BreakEvenPage() {
                                         <Text className="text-3xl">{result.isAboveBreakEven ? '✅' : '⚠️'}</Text>
                                         <View>
                                             <Text className="text-white font-bold text-lg">
-                                                {result.isAboveBreakEven ? 'Por encima del equilibrio' : 'Por debajo del equilibrio'}
+                                                {result.isAboveBreakEven ? t('calculator.break_even.above_break_even') : t('calculator.break_even.below_break_even')}
                                             </Text>
                                             <Text className={result.isAboveBreakEven ? 'text-emerald-400' : 'text-rose-400'}>
-                                                Margen de seguridad: {result.marginOfSafety != null ? result.marginOfSafety.toFixed(1) : '0'}%
+                                                {t('calculator.break_even.safety_margin')}: {result.marginOfSafety != null ? result.marginOfSafety.toFixed(1) : '0'}%
                                             </Text>
                                         </View>
                                     </View>
@@ -337,14 +341,14 @@ export default function BreakEvenPage() {
 
                             {/* Export */}
                             <GradientButton size="lg">
-                                📄 Exportar a PDF
+                                {t('calculator.export_pdf')}
                             </GradientButton>
                         </>
                     ) : (
                         <GlassCard className="items-center py-12">
                             <Ionicons name="calculator" size={48} color="#6b7280" />
                             <Text className="text-gray-400 mt-4 text-center">
-                                Ingresa tus datos para ver{'\n'}el análisis de punto de equilibrio
+                                {t('calculator.no_data')}
                             </Text>
                         </GlassCard>
                     )}
