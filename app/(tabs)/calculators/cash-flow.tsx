@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
     GlassCard,
@@ -15,6 +15,7 @@ import {
 import { CashFlowForecastCalculator } from '@/lib/infrastructure/calculators/CashFlowForecastCalculator';
 import { useTranslation } from '@/lib/i18n-context';
 import { LanguageSelector } from '@/components/language-selector';
+import { generateCashFlowPDF, printPDF } from '@/lib/export/pdf-generator';
 
 function InputField({
     label,
@@ -118,6 +119,7 @@ function AlertsPanel({ alerts }: { alerts: string[] }) {
 
 export default function CashFlowPage() {
     const { t } = useTranslation();
+    const [exporting, setExporting] = useState(false);
     const [startingCash, setStartingCash] = useState('50000');
     const [monthlyRevenue, setMonthlyRevenue] = useState('30000');
     const [monthlyExpenses, setMonthlyExpenses] = useState('25000');
@@ -175,6 +177,34 @@ export default function CashFlowPage() {
         
         return recs;
     }, [result, monthlyRevenue, monthlyExpenses, t]);
+
+    const handleExportPDF = async () => {
+        if (!result) return;
+        
+        setExporting(true);
+        try {
+            const html = generateCashFlowPDF({
+                inputs: {
+                    startingCash: parseFloat(startingCash) || 0,
+                    monthlyRevenue: parseFloat(monthlyRevenue) || 0,
+                    monthlyExpenses: parseFloat(monthlyExpenses) || 0,
+                    expectedGrowthRate: parseFloat(expectedGrowth) || 0,
+                },
+                results: {
+                    endingCash: result.endingCash,
+                    monthsUntilDeficit: result.monthsUntilDeficit,
+                    isHealthy: result.isHealthy,
+                    minimumCashReserve: result.minimumCashReserve,
+                },
+                recommendations,
+            });
+            await printPDF(html);
+        } catch (error) {
+            Alert.alert(t('common.error'), 'No se pudo exportar el PDF');
+        } finally {
+            setExporting(false);
+        }
+    };
 
     return (
         <ScrollView 
@@ -300,7 +330,13 @@ export default function CashFlowPage() {
                                     </GlassCard>
                                 )}
 
-                                <GradientButton size="lg">{t('calculator.export_pdf')}</GradientButton>
+                                <GradientButton 
+                                    size="lg" 
+                                    onPress={handleExportPDF}
+                                    disabled={exporting}
+                                >
+                                    📄 {exporting ? t('common.exporting') : t('calculator.export_pdf')}
+                                </GradientButton>
                             </>
                         ) : (
                             <GlassCard className="items-center py-12">
