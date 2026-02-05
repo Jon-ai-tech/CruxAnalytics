@@ -19,8 +19,8 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemScheme = useSystemColorScheme() ?? "light";
-  const [themeMode, setThemeModeState] = useState<ThemeMode>('auto');
-  const [colorScheme, setColorSchemeState] = useState<ColorScheme>(systemScheme);
+  const [themeMode, setThemeModeState] = useState<ThemeMode>('dark'); // Force dark mode by default
+  const [colorScheme, setColorSchemeState] = useState<ColorScheme>('dark'); // Force dark mode by default
 
   // Load saved theme preference on mount
   useEffect(() => {
