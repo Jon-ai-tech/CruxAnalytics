@@ -13,6 +13,7 @@ import {
     Badge,
 } from '@/components/landing/shared-components';
 import { LoanCalculator } from '@/lib/infrastructure/calculators/LoanCalculator';
+import { useTranslation } from '@/lib/i18n-context';
 
 function InputField({
     label, value, onChange, prefix, suffix, hint,
@@ -81,6 +82,7 @@ function AmortizationPreview({ schedule }: { schedule: Array<{ month: number; pa
 }
 
 export default function LoanPage() {
+    const { t } = useTranslation();
     const [principal, setPrincipal] = useState('100000');
     const [interestRate, setInterestRate] = useState('8.5');
     const [termMonths, setTermMonths] = useState('60');
@@ -111,11 +113,42 @@ export default function LoanPage() {
         }
     }, [principal, interestRate, termMonths, monthlyRevenue, monthlyExpenses, calculator]);
 
-    const recommendations = result ? calculator.generateRecommendations(result, {
-        principal: parseFloat(principal),
-        annualInterestRate: parseFloat(interestRate),
-        termMonths: parseInt(termMonths),
-    }) : [];
+    // ✅ Generate recommendations manually
+    const recommendations = useMemo(() => {
+        if (!result) return [];
+        
+        const recs: string[] = [];
+        const totalInterestPercent = (result.totalInterest / parseFloat(principal)) * 100;
+        
+        if (result.affordability.isAffordable === false) {
+            recs.push('🚨 Este préstamo supera tu capacidad de pago (>40% de ingresos). Busca un monto menor o plazo más largo.');
+        } else if (result.affordability.isAffordable === true) {
+            recs.push('✅ El préstamo es manejable según tus ingresos actuales (<40% de ingresos).');
+        }
+        
+        if (totalInterestPercent > 50) {
+            recs.push(`⚠️ Pagarás ${totalInterestPercent.toFixed(0)}% de interés sobre el capital. Considera negociar una tasa menor.`);
+        }
+        
+        if (parseInt(termMonths) > 60) {
+            recs.push('Plazo largo (>5 años). Considera pagos anticipados para reducir intereses totales.');
+        }
+        
+        if (parseFloat(interestRate) > 15) {
+            recs.push('Tasa de interés alta (>15%). Compara con otras instituciones financieras.');
+        } else if (parseFloat(interestRate) < 8) {
+            recs.push('Tasa de interés competitiva (<8%). Esta es una buena oferta.');
+        }
+        
+        if (result.affordability.cushionAfterPayment !== null && result.affordability.cushionAfterPayment > 0) {
+            recs.push(`Después del pago mensual te quedan $${result.affordability.cushionAfterPayment.toLocaleString()}. Considera crear un fondo de emergencia.`);
+        }
+        
+        recs.push('Compara al menos 3 opciones de préstamo antes de decidir.');
+        recs.push('Lee los términos y condiciones: comisiones por apertura, prepago, etc.');
+        
+        return recs;
+    }, [result, principal, termMonths, interestRate]);
 
     return (
         <ScrollView 
@@ -123,153 +156,159 @@ export default function LoanPage() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-            <SectionHeading
-                title="💳 Evaluador de Préstamos"
-                subtitle="Analiza si el financiamiento es conveniente para tu negocio"
-            />
+                <SectionHeading
+                    title={`💳 ${t('calculator.loan.title')}`}
+                    subtitle={t('calculator.loan.subtitle')}
+                />
 
-            <View className="flex-row flex-wrap gap-6">
-                {/* Form */}
-                <View className="flex-1 min-w-[300px]">
-                    <GlassCard>
-                        <Text className="text-white font-semibold text-lg mb-6">Datos del Préstamo</Text>
+                <View className="flex-row flex-wrap gap-6">
+                    {/* Form */}
+                    <View className="flex-1 min-w-[300px]">
+                        <GlassCard>
+                            <Text className="text-white font-semibold text-lg mb-6">
+                                {t('calculator.enter_data')}
+                            </Text>
 
-                        <InputField
-                            label="Monto del préstamo"
-                            value={principal}
-                            onChange={setPrincipal}
-                            prefix="$"
-                        />
+                            <InputField
+                                label={t('calculator.loan.loan_amount')}
+                                value={principal}
+                                onChange={setPrincipal}
+                                prefix="$"
+                            />
 
-                        <InputField
-                            label="Tasa de interés anual"
-                            value={interestRate}
-                            onChange={setInterestRate}
-                            suffix="%"
-                        />
+                            <InputField
+                                label={t('calculator.loan.interest_rate')}
+                                value={interestRate}
+                                onChange={setInterestRate}
+                                suffix="%"
+                            />
 
-                        <InputField
-                            label="Plazo"
-                            value={termMonths}
-                            onChange={setTermMonths}
-                            suffix="meses"
-                        />
+                            <InputField
+                                label={t('calculator.loan.term')}
+                                value={termMonths}
+                                onChange={setTermMonths}
+                                suffix={t('calculator.loan.months')}
+                            />
 
-                        <View className="h-px bg-white/10 my-4" />
-                        <Text className="text-gray-400 text-sm mb-4">Para análisis de affordability (opcional)</Text>
+                            <View className="h-px bg-white/10 my-4" />
+                            <Text className="text-gray-400 text-sm mb-4">
+                                {t('calculator.loan.affordability_analysis')}
+                            </Text>
 
-                        <InputField
-                            label="Ingresos mensuales"
-                            value={monthlyRevenue}
-                            onChange={setMonthlyRevenue}
-                            prefix="$"
-                        />
+                            <InputField
+                                label={t('calculator.loan.monthly_income')}
+                                value={monthlyRevenue}
+                                onChange={setMonthlyRevenue}
+                                prefix="$"
+                            />
 
-                        <InputField
-                            label="Gastos mensuales"
-                            value={monthlyExpenses}
-                            onChange={setMonthlyExpenses}
-                            prefix="$"
-                        />
-                    </GlassCard>
-                </View>
+                            <InputField
+                                label={t('calculator.loan.monthly_expenses')}
+                                value={monthlyExpenses}
+                                onChange={setMonthlyExpenses}
+                                prefix="$"
+                            />
+                        </GlassCard>
+                    </View>
 
-                {/* Results */}
-                <View className="flex-1 min-w-[300px] gap-4">
-                    {result ? (
-                        <>
-                            {/* Monthly Payment */}
-                            <GlassCard gradient className="items-center py-8">
-                                <Text className="text-gray-400">Pago Mensual</Text>
-                                <Text className="text-5xl font-bold text-white mt-2">
-                                    ${result.monthlyPayment.toLocaleString()}
+                    {/* Results */}
+                    <View className="flex-1 min-w-[300px] gap-4">
+                        {result ? (
+                            <>
+                                {/* Monthly Payment */}
+                                <GlassCard gradient className="items-center py-8">
+                                    <Text className="text-gray-400">{t('calculator.loan.monthly_payment')}</Text>
+                                    <Text className="text-5xl font-bold text-white mt-2">
+                                        ${result.monthlyPayment.toLocaleString()}
+                                    </Text>
+                                </GlassCard>
+
+                                {/* Summary Cards */}
+                                <View className="flex-row flex-wrap gap-4">
+                                    <GlassCard className="flex-1 min-w-[140px]">
+                                        <Text className="text-gray-400 text-sm">{t('calculator.loan.total_to_pay')}</Text>
+                                        <Text className="text-2xl font-bold text-white">
+                                            ${result.totalPayment.toLocaleString()}
+                                        </Text>
+                                    </GlassCard>
+
+                                    <GlassCard className="flex-1 min-w-[140px]">
+                                        <Text className="text-gray-400 text-sm">{t('calculator.loan.total_interest')}</Text>
+                                        <Text className="text-2xl font-bold text-rose-400">
+                                            ${result.totalInterest.toLocaleString()}
+                                        </Text>
+                                    </GlassCard>
+
+                                    <GlassCard className="flex-1 min-w-[140px]">
+                                        <Text className="text-gray-400 text-sm">{t('calculator.loan.effective_rate')}</Text>
+                                        <Text className="text-2xl font-bold text-amber-400">
+                                            {result.effectiveAnnualRate != null ? result.effectiveAnnualRate.toFixed(1) : '0'}%
+                                        </Text>
+                                    </GlassCard>
+                                </View>
+
+                                {/* Affordability */}
+                                {result.affordability.isAffordable !== null && (
+                                    <GlassCard className={`border-2 ${result.affordability.isAffordable ? 'border-[#86EFAC]/50' : 'border-[#FB923C]/50'}`}>
+                                        <View className="flex-row items-center gap-3">
+                                            <Text className="text-3xl">
+                                                {result.affordability.isAffordable ? '✅' : '⚠️'}
+                                            </Text>
+                                            <View className="flex-1">
+                                                <Text className="text-white font-bold text-lg">
+                                                    {result.affordability.isAffordable
+                                                        ? t('calculator.loan.affordable')
+                                                        : 'Préstamo RIESGOSO'
+                                                    }
+                                                </Text>
+                                                <Text className="text-gray-400 text-sm">
+                                                    {t('calculator.loan.debt_service_ratio', { 
+                                                        ratio: result.affordability.debtServiceRatio != null ? result.affordability.debtServiceRatio.toFixed(1) : '0' 
+                                                    })}
+                                                </Text>
+                                            </View>
+                                        </View>
+
+                                        {result.affordability.cushionAfterPayment !== null && (
+                                            <View className="mt-4 pt-4 border-t border-white/10">
+                                                <Text className="text-gray-400 text-sm">
+                                                    {t('calculator.loan.remaining_after_payment', {
+                                                        amount: result.affordability.cushionAfterPayment.toLocaleString()
+                                                    })}
+                                                </Text>
+                                            </View>
+                                        )}
+                                    </GlassCard>
+                                )}
+
+                                {/* Amortization Table */}
+                                <AmortizationPreview schedule={result.amortizationSchedule} />
+
+                                {/* Recommendations */}
+                                {recommendations.length > 0 && (
+                                    <GlassCard>
+                                        <Text className="text-white font-semibold mb-4">💡 {t('calculator.recommendations')}</Text>
+                                        <View className="gap-2">
+                                            {recommendations.map((rec, i) => (
+                                                <Text key={i} className="text-gray-300">• {rec}</Text>
+                                            ))}
+                                        </View>
+                                    </GlassCard>
+                                )}
+
+                                <GradientButton size="lg">📄 {t('calculator.export_pdf')}</GradientButton>
+                            </>
+                        ) : (
+                            <GlassCard className="items-center py-12">
+                                <Ionicons name="card" size={48} color="#6b7280" />
+                                <Text className="text-gray-400 mt-4 text-center">
+                                    {t('calculator.no_data')}
                                 </Text>
                             </GlassCard>
-
-                            {/* Summary Cards */}
-                            <View className="flex-row flex-wrap gap-4">
-                                <GlassCard className="flex-1 min-w-[140px]">
-                                    <Text className="text-gray-400 text-sm">Total a Pagar</Text>
-                                    <Text className="text-2xl font-bold text-white">
-                                        ${result.totalPayment.toLocaleString()}
-                                    </Text>
-                                </GlassCard>
-
-                                <GlassCard className="flex-1 min-w-[140px]">
-                                    <Text className="text-gray-400 text-sm">Total Intereses</Text>
-                                    <Text className="text-2xl font-bold text-rose-400">
-                                        ${result.totalInterest.toLocaleString()}
-                                    </Text>
-                                </GlassCard>
-
-                                <GlassCard className="flex-1 min-w-[140px]">
-                                    <Text className="text-gray-400 text-sm">Tasa Efectiva</Text>
-                                    <Text className="text-2xl font-bold text-amber-400">
-                                        {result.effectiveAnnualRate != null ? result.effectiveAnnualRate.toFixed(1) : '0'}%
-                                    </Text>
-                                </GlassCard>
-                            </View>
-
-                            {/* Affordability */}
-                            {result.affordability.isAffordable !== null && (
-                                <GlassCard className={`border-2 ${result.affordability.isAffordable ? 'border-[#86EFAC]/50' : 'border-[#FB923C]/50'}`}>
-                                    <View className="flex-row items-center gap-3">
-                                        <Text className="text-3xl">
-                                            {result.affordability.isAffordable ? '✅' : '⚠️'}
-                                        </Text>
-                                        <View className="flex-1">
-                                            <Text className="text-white font-bold text-lg">
-                                                {result.affordability.isAffordable
-                                                    ? 'Préstamo AFFORDABLE'
-                                                    : 'Préstamo RIESGOSO'
-                                                }
-                                            </Text>
-                                            <Text className="text-gray-400 text-sm">
-                                                Ratio de servicio de deuda: {result.affordability.debtServiceRatio != null ? result.affordability.debtServiceRatio.toFixed(1) : '0'}%
-                                                {result.affordability.isAffordable ? ' (< 40% es saludable)' : ' (> 40% es riesgoso)'}
-                                            </Text>
-                                        </View>
-                                    </View>
-
-                                    {result.affordability.cushionAfterPayment !== null && (
-                                        <View className="mt-4 pt-4 border-t border-white/10">
-                                            <Text className="text-gray-400 text-sm">
-                                                Después del pago te quedan: {' '}
-                                                <Text className={result.affordability.cushionAfterPayment >= 0 ? 'text-emerald-400' : 'text-rose-400'}>
-                                                    ${result.affordability.cushionAfterPayment.toLocaleString()}/mes
-                                                </Text>
-                                            </Text>
-                                        </View>
-                                    )}
-                                </GlassCard>
-                            )}
-
-                            {/* Amortization Table */}
-                            <AmortizationPreview schedule={result.amortizationSchedule} />
-
-                            {/* Recommendations */}
-                            <GlassCard>
-                                <Text className="text-white font-semibold mb-4">💡 Recomendaciones</Text>
-                                <View className="gap-2">
-                                    {recommendations.map((rec, i) => (
-                                        <Text key={i} className="text-gray-300">• {rec}</Text>
-                                    ))}
-                                </View>
-                            </GlassCard>
-
-                            <GradientButton size="lg">📄 Exportar a PDF</GradientButton>
-                        </>
-                    ) : (
-                        <GlassCard className="items-center py-12">
-                            <Ionicons name="card" size={48} color="#6b7280" />
-                            <Text className="text-gray-400 mt-4 text-center">
-                                Ingresa los datos del préstamo{'\n'}para ver el análisis
-                            </Text>
-                        </GlassCard>
-                    )}
+                        )}
+                    </View>
                 </View>
             </View>
-        </View>
-    </ScrollView>
-);
+        </ScrollView>
+    );
 }
