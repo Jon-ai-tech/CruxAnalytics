@@ -127,7 +127,7 @@ export default function HomeScreen() {
       >
         <View className="p-6 gap-6">
           {/* Header with Language Selector */}
-          <View className="flex-row items-start justify-between glass rounded-2xl p-6 bg-gradient-to-r from-primary to-success">
+          <View className="flex-row items-start justify-between bg-surface rounded-2xl p-6 border border-primary/20">
             <View className="flex-1 gap-2">
               <Text className="text-4xl font-heading text-foreground">
                 {t('home.welcome')}
@@ -203,7 +203,7 @@ export default function HomeScreen() {
 
           {/* Quick Stats Card (if we have projects) */}
           {projects.length > 0 && (
-            <View className="glass rounded-2xl p-6 border border-border">
+            <View className="bg-surface rounded-2xl p-6 border border-border">
               <Text className="text-lg font-heading-medium text-foreground mb-4">
                 {t('dashboard.quick_stats')}
               </Text>
