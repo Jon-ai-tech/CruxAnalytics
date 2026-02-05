@@ -15,6 +15,7 @@ import {
 } from '@/components/landing/shared-components';
 import { BreakEvenCalculator } from '@/lib/infrastructure/calculators/BreakEvenCalculator';
 import { useTranslation } from '@/lib/i18n-context';
+import { LanguageSelector } from '@/components/language-selector';
 
 // ============================================
 // INPUT FIELD COMPONENT
@@ -276,10 +277,16 @@ export default function BreakEvenPage() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-            <SectionHeading
-                title={t('calculator.break_even.title')}
-                subtitle={t('calculator.break_even.subtitle')}
-            />
+            {/* Header with Language Selector */}
+            <View className="flex-row items-start justify-between mb-6">
+                <View className="flex-1">
+                    <SectionHeading
+                        title={t('calculator.break_even.title')}
+                        subtitle={t('calculator.break_even.subtitle')}
+                    />
+                </View>
+                <LanguageSelector />
+            </View>
 
             <View className="flex-row flex-wrap gap-6">
                 {/* Input Form */}

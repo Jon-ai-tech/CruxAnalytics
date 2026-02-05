@@ -14,6 +14,7 @@ import {
 } from '@/components/landing/shared-components';
 import { EmployeeROICalculator } from '@/lib/infrastructure/calculators/EmployeeROICalculator';
 import { useTranslation } from '@/lib/i18n-context';
+import { LanguageSelector } from '@/components/language-selector';
 
 function InputField({
     label, value, onChange, prefix, suffix, hint,
@@ -163,10 +164,16 @@ export default function EmployeeROIPage() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-                <SectionHeading
-                    title={`👥 ${t('calculator.employee_roi.title')}`}
-                    subtitle={t('calculator.employee_roi.subtitle')}
-                />
+                {/* Header with Language Selector */}
+                <View className="flex-row items-start justify-between mb-6">
+                    <View className="flex-1">
+                        <SectionHeading
+                            title={`👥 ${t('calculator.employee_roi.title')}`}
+                            subtitle={t('calculator.employee_roi.subtitle')}
+                        />
+                    </View>
+                    <LanguageSelector />
+                </View>
 
                 <View className="flex-row flex-wrap gap-6">
                     {/* Form */}

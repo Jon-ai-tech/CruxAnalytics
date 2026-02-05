@@ -14,6 +14,7 @@ import {
 } from '@/components/landing/shared-components';
 import { PricingCalculator } from '@/lib/infrastructure/calculators/PricingCalculator';
 import { useTranslation } from '@/lib/i18n-context';
+import { LanguageSelector } from '@/components/language-selector';
 
 function InputField({
     label, value, onChange, prefix, suffix, hint,
@@ -118,10 +119,16 @@ export default function PricingPage() {
             contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
         >
             <View className="max-w-5xl mx-auto">
-                <SectionHeading
-                    title={`🏷️ ${t('calculator.pricing.title')}`}
-                    subtitle={t('calculator.pricing.subtitle')}
-                />
+                {/* Header with Language Selector */}
+                <View className="flex-row items-start justify-between mb-6">
+                    <View className="flex-1">
+                        <SectionHeading
+                            title={`🏷️ ${t('calculator.pricing.title')}`}
+                            subtitle={t('calculator.pricing.subtitle')}
+                        />
+                    </View>
+                    <LanguageSelector />
+                </View>
 
                 <View className="flex-row flex-wrap gap-6">
                     {/* Form */}
