@@ -13,6 +13,7 @@ import {
     Badge,
 } from '@/components/landing/shared-components';
 import { CashFlowForecastCalculator } from '@/lib/infrastructure/calculators/CashFlowForecastCalculator';
+import { useTranslation } from '@/lib/i18n-context';
 
 function InputField({
     label,
@@ -46,11 +47,12 @@ function InputField({
 }
 
 function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; netCash: number; balance: number }> }) {
+    const { t } = useTranslation();
     const maxBalance = Math.max(...forecasts.map(f => Math.abs(f.balance)));
 
     return (
         <GlassCard>
-            <Text className="text-white font-semibold mb-4">📊 Proyección 12 Meses</Text>
+            <Text className="text-white font-semibold mb-4">{t('calculator.cash_flow.projection_12_months')}</Text>
 
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View className="flex-row gap-2 pb-4">
@@ -68,7 +70,7 @@ function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; net
                                     />
                                 </View>
                                 {/* Month label */}
-                                <Text className="text-gray-400 text-xs mt-2">Mes {forecast.month}</Text>
+                                <Text className="text-gray-400 text-xs mt-2">{t('calculator.cash_flow.month')} {forecast.month}</Text>
                                 {/* Value */}
                                 <Text className={`text-xs font-medium ${isPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
                                     ${forecast.balance != null ? (forecast.balance / 1000).toFixed(0) : '0'}k
@@ -83,14 +85,15 @@ function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; net
 }
 
 function AlertsPanel({ alerts }: { alerts: string[] }) {
+    const { t } = useTranslation();
     if (alerts.length === 0) {
         return (
             <GlassCard className="border border-[#86EFAC]/30">
                 <View className="flex-row items-center gap-3">
                     <Text className="text-2xl">✅</Text>
                     <View>
-                        <Text className="text-emerald-400 font-bold">Sin alertas críticas</Text>
-                        <Text className="text-gray-400 text-sm">Tu flujo de caja se ve saludable</Text>
+                        <Text className="text-emerald-400 font-bold">{t('calculator.cash_flow.no_critical_alerts')}</Text>
+                        <Text className="text-gray-400 text-sm">{t('calculator.cash_flow.cash_flow_healthy_desc')}</Text>
                     </View>
                 </View>
             </GlassCard>
@@ -99,7 +102,7 @@ function AlertsPanel({ alerts }: { alerts: string[] }) {
 
     return (
         <GlassCard className="border border-[#FB923C]/30">
-            <Text className="text-white font-semibold mb-4">⚠️ Alertas</Text>
+            <Text className="text-white font-semibold mb-4">{t('calculator.cash_flow.alerts')}</Text>
             <View className="gap-2">
                 {alerts.map((alert, index) => (
                     <View key={index} className="flex-row items-start gap-2">
@@ -113,6 +116,7 @@ function AlertsPanel({ alerts }: { alerts: string[] }) {
 }
 
 export default function CashFlowPage() {
+    const { t } = useTranslation();
     const [startingCash, setStartingCash] = useState('50000');
     const [monthlyRevenue, setMonthlyRevenue] = useState('30000');
     const [monthlyExpenses, setMonthlyExpenses] = useState('25000');
@@ -178,46 +182,46 @@ export default function CashFlowPage() {
         >
             <View className="max-w-5xl mx-auto">
                 <SectionHeading
-                    title="💰 Flujo de Caja"
-                    subtitle="Proyecta tus ingresos y gastos para los próximos 12 meses"
+                    title={t('calculator.cash_flow.title')}
+                    subtitle={t('calculator.cash_flow.subtitle')}
                 />
 
                 <View className="flex-row flex-wrap gap-6">
                     {/* Input Form */}
                     <View className="flex-1 min-w-[300px]">
                         <GlassCard>
-                            <Text className="text-white font-semibold text-lg mb-6">Ingresa tus datos</Text>
+                            <Text className="text-white font-semibold text-lg mb-6">{t('calculator.enter_data')}</Text>
 
                             <InputField
-                                label="Efectivo inicial"
+                                label={t('calculator.cash_flow.starting_cash')}
                                 value={startingCash}
                                 onChange={setStartingCash}
                                 prefix="$"
-                                hint="Dinero disponible ahora"
+                                hint={t('calculator.cash_flow.starting_cash_hint')}
                             />
 
                             <InputField
-                                label="Ingresos mensuales"
+                                label={t('calculator.cash_flow.monthly_revenue')}
                                 value={monthlyRevenue}
                                 onChange={setMonthlyRevenue}
                                 prefix="$"
-                                hint="Promedio de ventas"
+                                hint={t('calculator.cash_flow.monthly_revenue_hint')}
                             />
 
                             <InputField
-                                label="Gastos mensuales"
+                                label={t('calculator.cash_flow.monthly_expenses')}
                                 value={monthlyExpenses}
                                 onChange={setMonthlyExpenses}
                                 prefix="$"
-                                hint="Todos los gastos fijos y variables"
+                                hint={t('calculator.cash_flow.monthly_expenses_hint')}
                             />
 
                             <InputField
-                                label="Crecimiento esperado"
+                                label={t('calculator.cash_flow.expected_growth')}
                                 value={expectedGrowth}
                                 onChange={setExpectedGrowth}
                                 prefix="%"
-                                hint="Porcentaje de crecimiento mensual"
+                                hint={t('calculator.cash_flow.expected_growth_hint')}
                             />
                         </GlassCard>
                     </View>
@@ -229,23 +233,23 @@ export default function CashFlowPage() {
                                 {/* Summary Cards */}
                                 <View className="flex-row flex-wrap gap-4">
                                     <GlassCard className="flex-1 min-w-[140px]">
-                                        <Text className="text-gray-400 text-sm">Balance Final</Text>
+                                        <Text className="text-gray-400 text-sm">{t('calculator.cash_flow.final_balance')}</Text>
                                         <Text className={`text-2xl font-bold ${result.endingCash >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                                            ${result.endingCash.toLocaleString()}
+                                            ${(result.endingCash ?? 0).toLocaleString()}
                                         </Text>
                                     </GlassCard>
 
                                     <GlassCard className="flex-1 min-w-[140px]">
-                                        <Text className="text-gray-400 text-sm">Runway</Text>
+                                        <Text className="text-gray-400 text-sm">{t('calculator.cash_flow.runway')}</Text>
                                         <Text className="text-2xl font-bold text-white">
-                                            {result.monthsUntilDeficit ?? '∞'} meses
+                                            {result.monthsUntilDeficit ?? '∞'} {t('calculator.cash_flow.months')}
                                         </Text>
                                     </GlassCard>
 
                                     <GlassCard className="flex-1 min-w-[140px]">
-                                        <Text className="text-gray-400 text-sm">Reserva Mínima</Text>
+                                        <Text className="text-gray-400 text-sm">{t('calculator.cash_flow.minimum_reserve')}</Text>
                                         <Text className="text-2xl font-bold text-amber-400">
-                                            ${result.minimumCashReserve.toLocaleString()}
+                                            ${(result.minimumCashReserve ?? 0).toLocaleString()}
                                         </Text>
                                     </GlassCard>
                                 </View>
@@ -256,12 +260,12 @@ export default function CashFlowPage() {
                                         <Text className="text-3xl">{result.isHealthy ? '🟢' : '🔴'}</Text>
                                         <View>
                                             <Text className="text-white font-bold text-lg">
-                                                {result.isHealthy ? 'Flujo de Caja Saludable' : 'Flujo de Caja en Riesgo'}
+                                                {result.isHealthy ? t('calculator.cash_flow.healthy_cash_flow') : t('calculator.cash_flow.cash_flow_at_risk')}
                                             </Text>
                                             <Text className={result.isHealthy ? 'text-emerald-400' : 'text-rose-400'}>
                                                 {result.isHealthy
-                                                    ? 'Tienes suficiente liquidez para los próximos 12 meses'
-                                                    : `Podrías quedarte sin efectivo en ${result.monthsUntilDeficit} meses`
+                                                    ? t('calculator.cash_flow.sufficient_liquidity')
+                                                    : t('calculator.cash_flow.run_out_warning', { months: result.monthsUntilDeficit })
                                                 }
                                             </Text>
                                         </View>
@@ -277,7 +281,7 @@ export default function CashFlowPage() {
                                 {/* Recommendations */}
                                 {recommendations.length > 0 && (
                                     <GlassCard>
-                                        <Text className="text-white font-semibold mb-4">💡 Recomendaciones</Text>
+                                        <Text className="text-white font-semibold mb-4">{t('calculator.recommendations')}</Text>
                                         <View className="gap-2">
                                             {recommendations.map((rec, i) => (
                                                 <View key={i} className="flex-row gap-2">
@@ -289,13 +293,13 @@ export default function CashFlowPage() {
                                     </GlassCard>
                                 )}
 
-                                <GradientButton size="lg">📄 Exportar a PDF</GradientButton>
+                                <GradientButton size="lg">{t('calculator.export_pdf')}</GradientButton>
                             </>
                         ) : (
                             <GlassCard className="items-center py-12">
                                 <Ionicons name="wallet" size={48} color="#6b7280" />
                                 <Text className="text-gray-400 mt-4 text-center">
-                                    Ingresa tus datos para ver{'\n'}la proyección de flujo de caja
+                                    {t('calculator.no_data')}
                                 </Text>
                             </GlassCard>
                         )}
