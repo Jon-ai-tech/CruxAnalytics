@@ -56,7 +56,7 @@ function RoleSelector({ selected, onSelect }: { selected: string; onSelect: (rol
                         key={role.id}
                         onPress={() => onSelect(role.id)}
                         className={`px-4 py-2 rounded-xl border ${selected === role.id
-                                ? 'bg-indigo-500/20 border-indigo-500'
+                                ? 'bg-#14B8A6/20 border-#14B8A6'
                                 : 'bg-slate-800 border-white/10'
                             }`}
                     >
@@ -70,10 +70,10 @@ function RoleSelector({ selected, onSelect }: { selected: string; onSelect: (rol
 
 function ROIGauge({ roi }: { roi: number }) {
     const getColor = () => {
-        if (roi >= 100) return { bg: 'bg-emerald-500', text: 'text-emerald-400' };
-        if (roi >= 50) return { bg: 'bg-amber-500', text: 'text-amber-400' };
+        if (roi >= 100) return { bg: 'bg-#86EFAC', text: 'text-emerald-400' };
+        if (roi >= 50) return { bg: 'bg-#FB923C', text: 'text-amber-400' };
         if (roi >= 0) return { bg: 'bg-orange-500', text: 'text-orange-400' };
-        return { bg: 'bg-rose-500', text: 'text-rose-400' };
+        return { bg: 'bg-#FB923C', text: 'text-rose-400' };
     };
 
     const colors = getColor();

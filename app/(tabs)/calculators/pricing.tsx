@@ -45,7 +45,7 @@ function PriceStrategyCard({
     strategy: string; price: number; benefits: string; recommended?: boolean;
 }) {
     return (
-        <GlassCard className={`flex-1 min-w-[150px] ${recommended ? 'border-2 border-indigo-500' : ''}`}>
+        <GlassCard className={`flex-1 min-w-[150px] ${recommended ? 'border-2 border-#14B8A6' : ''}`}>
             {recommended && (
                 <Badge variant="success" className="mb-2">✨ Recomendado</Badge>
             )}
@@ -155,7 +155,7 @@ export default function PricingPage() {
                                         <Text className="text-white text-xl font-bold">${result.recommendedPriceRange.low}</Text>
                                     </View>
                                     <View className="flex-1 h-2 bg-slate-700 rounded-full">
-                                        <View className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full" style={{ width: '60%' }} />
+                                        <View className="h-full bg-gradient-to-r from-#14B8A6 to-#86EFAC rounded-full" style={{ width: '60%' }} />
                                     </View>
                                     <View className="items-center">
                                         <Text className="text-gray-400 text-xs">Máximo</Text>
@@ -187,7 +187,7 @@ export default function PricingPage() {
 
                             {/* Competitor Comparison */}
                             {result.competitorComparison && (
-                                <GlassCard className={`border ${result.competitorComparison.position === 'above' ? 'border-amber-500/30' : 'border-emerald-500/30'}`}>
+                                <GlassCard className={`border ${result.competitorComparison.position === 'above' ? 'border-#FB923C/30' : 'border-#86EFAC/30'}`}>
                                     <View className="flex-row items-center gap-3">
                                         <Text className="text-2xl">
                                             {result.competitorComparison.position === 'above' ? '⬆️' : '⬇️'}

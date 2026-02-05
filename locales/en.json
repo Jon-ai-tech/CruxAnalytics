@@ -616,5 +616,31 @@
     "min_value": "Minimum value is {{min}}",
     "max_value": "Maximum value is {{max}}",
     "invalid_format": "Invalid format"
+  },
+  "calculators": {
+    "break_even": {
+      "title": "Break-Even Point",
+      "description": "How much to sell to avoid losses?"
+    },
+    "cash_flow": {
+      "title": "Cash Flow",
+      "description": "12-month income and expense projection"
+    },
+    "pricing": {
+      "title": "Pricing Calculator",
+      "description": "Calculate optimal price"
+    },
+    "loan": {
+      "title": "Loan Evaluator",
+      "description": "Compare financing options"
+    },
+    "employee_roi": {
+      "title": "Employee ROI",
+      "description": "Is hiring worth it?"
+    },
+    "marketing_roi": {
+      "title": "Marketing ROI",
+      "description": "Measure your advertising"
+    }
   }
 }

@@ -208,7 +208,7 @@ export default function LoanPage() {
 
                             {/* Affordability */}
                             {result.affordability.isAffordable !== null && (
-                                <GlassCard className={`border-2 ${result.affordability.isAffordable ? 'border-emerald-500/50' : 'border-rose-500/50'}`}>
+                                <GlassCard className={`border-2 ${result.affordability.isAffordable ? 'border-#86EFAC/50' : 'border-#FB923C/50'}`}>
                                     <View className="flex-row items-center gap-3">
                                         <Text className="text-3xl">
                                             {result.affordability.isAffordable ? '✅' : '⚠️'}

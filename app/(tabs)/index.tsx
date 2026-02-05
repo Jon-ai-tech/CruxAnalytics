@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ScrollView, Text, View, TouchableOpacity, RefreshControl } from 'react-native';
+import { ScrollView, Text, View, TouchableOpacity, RefreshControl, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { ScreenContainer } from '@/components/screen-container';
 import { ProjectCard } from '@/components/business/project-card';
@@ -19,6 +20,129 @@ import type { ProjectData } from '@/types/project';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useColors } from '@/hooks/use-colors';
 import { useProjectFilters } from '@/hooks/use-project-filters';
+
+// ============================================
+// HEALTH SCORE HELPERS
+// ============================================
+function calculateHealthScore(projects: ProjectData[]): number | null {
+  if (projects.length < 3) return null;
+  
+  const viableCount = projects.filter(p => p.results && p.results.roi > 0).length;
+  const score = Math.round((viableCount / projects.length) * 100);
+  return Math.min(100, Math.max(0, score));
+}
+
+function getScoreColor(score: number): string {
+  if (score >= 75) return '#86EFAC'; // Mint (success)
+  if (score >= 50) return '#FB923C'; // Coral (warning)
+  return '#FB923C'; // Coral (error)
+}
+
+function getScoreLabel(score: number): string {
+  if (score >= 75) return 'Excelente';
+  if (score >= 50) return 'Bueno';
+  return 'Necesita atención';
+}
+
+// ============================================
+// HEALTH SCORE GAUGE COMPONENT
+// ============================================
+function HealthScoreGauge({ score, colors }: { score: number | null; colors: any }) {
+  return (
+    <View className="bg-surface/50 backdrop-blur-xl rounded-3xl p-8 border border-border/50">
+      <Text className="text-muted text-sm mb-4 uppercase tracking-wider font-body-medium">HEALTH SCORE</Text>
+      {score !== null ? (
+        <>
+          <View 
+            className="w-36 h-36 rounded-full border-8 items-center justify-center mb-4"
+            style={{ borderColor: `${getScoreColor(score)}30` }}
+          >
+            <Text className="text-5xl font-mono text-foreground" style={{ letterSpacing: -0.01 * 16 }}>
+              {score}
+            </Text>
+          </View>
+          <Text className="text-success font-body-medium">{getScoreLabel(score)}</Text>
+        </>
+      ) : (
+        <>
+          <View className="w-36 h-36 rounded-full border-8 border-border items-center justify-center mb-4">
+            <IconSymbol size={48} name="chart.line.uptrend.xyaxis" color={colors.muted} />
+          </View>
+          <Text className="text-muted font-body text-center text-sm">
+            Completa al menos 3 análisis para ver tu score
+          </Text>
+        </>
+      )}
+    </View>
+  );
+}
+
+// ============================================
+// TOOL CARDS DATA & COMPONENT
+// ============================================
+const TOOL_CARDS = [
+  { 
+    icon: 'chart.line.uptrend.xyaxis', 
+    title: 'Punto de Equilibrio', 
+    description: '¿Cuánto debes vender para no perder?',
+    href: '/calculators/break-even',
+    color: 'primary'
+  },
+  { 
+    icon: 'dollarsign.circle', 
+    title: 'Flujo de Caja', 
+    description: 'Proyección de ingresos y gastos 12 meses',
+    href: '/calculators/cash-flow',
+    color: 'success'
+  },
+  { 
+    icon: 'tag', 
+    title: 'Calculadora de Precios', 
+    description: 'Calcula el precio óptimo',
+    href: '/calculators/pricing',
+    color: 'warning'
+  },
+  { 
+    icon: 'creditcard', 
+    title: 'Evaluador de Préstamos', 
+    description: 'Compara opciones de financiamiento',
+    href: '/calculators/loan',
+    color: 'primary'
+  },
+  { 
+    icon: 'person.2', 
+    title: 'ROI de Empleados', 
+    description: '¿Vale la pena contratar?',
+    href: '/calculators/employee-roi',
+    color: 'success'
+  },
+  { 
+    icon: 'megaphone', 
+    title: 'ROI de Marketing', 
+    description: 'Mide tu publicidad',
+    href: '/calculators/marketing',
+    color: 'warning'
+  },
+];
+
+function ToolCard({ icon, title, description, href, color, colors }: any) {
+  const handlePress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    router.push(href as any);
+  };
+
+  return (
+    <Pressable onPress={handlePress} className="flex-1 min-w-[160px] max-w-[48%] mb-4">
+      <View className="bg-surface/50 backdrop-blur-xl rounded-2xl p-6 border border-border/50">
+        <View className={`w-12 h-12 rounded-xl bg-${color}/10 items-center justify-center mb-4`}>
+          <IconSymbol size={24} name={icon} color={colors[color]} />
+        </View>
+        <Text className="text-lg font-heading-medium text-foreground mb-2">{title}</Text>
+        <Text className="text-sm font-body text-muted">{description}</Text>
+      </View>
+    </Pressable>
+  );
+}
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -127,48 +251,97 @@ export default function HomeScreen() {
       >
         <View className="p-6 gap-6">
           {/* Header with Language Selector */}
-          <View className="flex-row items-start justify-between mb-8">
+          <View className="flex-row items-start justify-between">
             <View className="flex-1 gap-3">
-              <Text className="text-5xl font-heading text-foreground tracking-tight">
+              <Text className="text-5xl font-heading text-foreground" style={{ letterSpacing: -0.02 * 16 }}>
                 {t('home.welcome')}
-              </Text>
-              <Text className="text-lg font-body text-muted leading-relaxed">
-                {t('home.subtitle')}
               </Text>
             </View>
             <LanguageSelector />
           </View>
 
-          {/* Search and Filters */}
+          {/* Privacy Badge */}
+          <View className="bg-success/10 border border-success/30 rounded-full px-3 py-1.5 flex-row items-center gap-2 self-start">
+            <View className="w-1.5 h-1.5 rounded-full bg-success" />
+            <Text className="text-xs font-mono text-success tracking-wider">
+              LOCAL-ONLY | ENCRYPTED
+            </Text>
+          </View>
+
+          {/* Health Score + Quick Stats Row */}
           {projects.length > 0 && (
-            <View className="gap-4">
-              <SearchBar
-                onSearch={setSearchQuery}
-                placeholder={t('projects_list.search_placeholder')}
-              />
-              
-              <FilterChips
-                selected={filterOption}
-                onSelect={setFilterOption}
-                counts={counts}
-                labels={{
-                  all: t('projects_list.filter_all'),
-                  viable: t('status.viable'),
-                  review: t('status.review'),
-                  not_viable: t('status.not_viable'),
-                }}
-              />
+            <View className="flex-row gap-6">
+              <HealthScoreGauge score={calculateHealthScore(projects)} colors={colors} />
+              <View className="flex-1 bg-surface/80 backdrop-blur-xl rounded-3xl p-8 border border-border/50">
+                <Text className="text-xl font-heading-medium text-foreground mb-6">
+                  {t('dashboard.quick_stats')}
+                </Text>
+                <View className="flex-col gap-4">
+                  <View className="bg-primary/5 rounded-2xl p-4">
+                    <View className="flex-row items-center gap-2 mb-2">
+                      <IconSymbol size={20} name="chart.bar.fill" color={colors.primary} />
+                      <Text className="text-3xl font-heading text-primary">
+                        {projects.length}
+                      </Text>
+                    </View>
+                    <Text className="text-sm font-body text-muted">{t('dashboard.total_projects')}</Text>
+                  </View>
+                  <View className="bg-success/5 rounded-2xl p-4">
+                    <View className="flex-row items-center gap-2 mb-2">
+                      <IconSymbol size={20} name="checkmark.circle.fill" color={colors.success} />
+                      <Text className="text-3xl font-heading text-success">
+                        {projects.filter(p => p.results && p.results.roi > 0).length}
+                      </Text>
+                    </View>
+                    <Text className="text-sm font-body text-muted">{t('status.viable')}</Text>
+                  </View>
+                </View>
+              </View>
             </View>
           )}
 
-          {/* Projects List */}
-          <View className="gap-4">
-            <View className="flex-row items-center justify-between">
-              <Text className="text-xl font-heading-medium text-foreground">
-                {filteredProjects.length > 0 ? `${filteredProjects.length} ${t('common.all')}` : t('home.recent_projects')}
-              </Text>
+          {/* Tool Cards Grid */}
+          <View>
+            <Text className="text-2xl font-heading-medium text-foreground mb-4">
+              Herramientas de Análisis
+            </Text>
+            <View className="flex-row flex-wrap gap-4">
+              {TOOL_CARDS.map(tool => (
+                <ToolCard key={tool.href} {...tool} colors={colors} />
+              ))}
             </View>
+          </View>
 
+          {/* Projects List */}
+          {projects.length > 0 && (
+            <>
+              <Text className="text-2xl font-heading-medium text-foreground mb-4">
+                Proyectos Recientes
+              </Text>
+              
+              {/* Search and Filters */}
+              <View className="gap-4">
+                <SearchBar
+                  onSearch={setSearchQuery}
+                  placeholder={t('projects_list.search_placeholder')}
+                />
+                
+                <FilterChips
+                  selected={filterOption}
+                  onSelect={setFilterOption}
+                  counts={counts}
+                  labels={{
+                    all: t('projects_list.filter_all'),
+                    viable: t('status.viable'),
+                    review: t('status.review'),
+                    not_viable: t('status.not_viable'),
+                  }}
+                />
+              </View>
+            </>
+          )}
+
+          <View className="gap-4">
             {loading ? (
               <SkeletonProjectList count={3} />
             ) : projects.length === 0 ? (
@@ -202,35 +375,6 @@ export default function HomeScreen() {
               </View>
             )}
           </View>
-
-          {/* Quick Stats Card (if we have projects) */}
-          {projects.length > 0 && (
-            <View className="bg-surface/80 backdrop-blur-xl rounded-3xl p-8 border border-border/50 shadow-lg">
-              <Text className="text-xl font-heading-medium text-foreground mb-6">
-                {t('dashboard.quick_stats')}
-              </Text>
-              <View className="flex-row gap-6">
-                <View className="flex-1 bg-primary/5 rounded-2xl p-4">
-                  <View className="flex-row items-center gap-2 mb-2">
-                    <IconSymbol size={20} name="chart.bar.fill" color={colors.primary} />
-                    <Text className="text-3xl font-heading text-primary">
-                      {projects.length}
-                    </Text>
-                  </View>
-                  <Text className="text-sm font-body text-muted">{t('dashboard.total_projects')}</Text>
-                </View>
-                <View className="flex-1 bg-success/5 rounded-2xl p-4">
-                  <View className="flex-row items-center gap-2 mb-2">
-                    <IconSymbol size={20} name="checkmark.circle.fill" color={colors.success} />
-                    <Text className="text-3xl font-heading text-success">
-                      {projects.filter(p => p.results && p.results.roi > 0).length}
-                    </Text>
-                  </View>
-                  <Text className="text-sm font-body text-muted">{t('status.viable')}</Text>
-                </View>
-              </View>
-            </View>
-          )}
         </View>
       </ScrollView>
 

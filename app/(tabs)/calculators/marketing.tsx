@@ -44,8 +44,8 @@ function ChannelSelector({ selected, onSelect }: { selected: string; onSelect: (
         { id: 'facebook', label: 'Facebook', icon: '📘', color: 'bg-blue-500/20 border-blue-500' },
         { id: 'google', label: 'Google', icon: '🔍', color: 'bg-green-500/20 border-green-500' },
         { id: 'instagram', label: 'Instagram', icon: '📸', color: 'bg-pink-500/20 border-pink-500' },
-        { id: 'email', label: 'Email', icon: '✉️', color: 'bg-amber-500/20 border-amber-500' },
-        { id: 'referral', label: 'Referidos', icon: '🤝', color: 'bg-violet-500/20 border-violet-500' },
+        { id: 'email', label: 'Email', icon: '✉️', color: 'bg-#FB923C/20 border-#FB923C' },
+        { id: 'referral', label: 'Referidos', icon: '🤝', color: 'bg-#86EFAC/20 border-#86EFAC' },
         { id: 'other', label: 'Otro', icon: '📊', color: 'bg-gray-500/20 border-gray-500' },
     ];
 
@@ -100,7 +100,7 @@ function FunnelVisual({ impressions, clicks, conversions }: { impressions?: numb
                         </View>
                         <View className="h-6 bg-slate-700 rounded-full overflow-hidden">
                             <View
-                                className="h-full bg-indigo-500 rounded-full"
+                                className="h-full bg-#14B8A6 rounded-full"
                                 style={{ width: `${clicksWidth}%` }}
                             />
                         </View>
@@ -114,7 +114,7 @@ function FunnelVisual({ impressions, clicks, conversions }: { impressions?: numb
                     </View>
                     <View className="h-6 bg-slate-700 rounded-full overflow-hidden">
                         <View
-                            className="h-full bg-emerald-500 rounded-full"
+                            className="h-full bg-#86EFAC rounded-full"
                             style={{ width: `${Math.max(conversionsWidth, 5)}%` }}
                         />
                     </View>
@@ -240,7 +240,7 @@ export default function MarketingPage() {
                             </View>
 
                             {/* Profit/Loss */}
-                            <GlassCard className={`border-2 ${result.isProfitable ? 'border-emerald-500/50' : 'border-rose-500/50'}`}>
+                            <GlassCard className={`border-2 ${result.isProfitable ? 'border-#86EFAC/50' : 'border-#FB923C/50'}`}>
                                 <View className="flex-row items-center gap-3">
                                     <Text className="text-4xl">{result.isProfitable ? '💰' : '📉'}</Text>
                                     <View>
