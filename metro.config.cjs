@@ -17,27 +17,30 @@ config.resolver.unstable_enableSymlinks = true;
 
 // ✅ NUEVO: Agregar soporte para workers y import.meta
 config.transformer = {
-  ...config.transformer,
-  getTransformOptions: async () => ({
-    transform: {
-      experimentalImportSupport: true,
-      inlineRequires: true,
-    },
-  }),
+    ...config.transformer,
+    getTransformOptions: async () => ({
+        transform: {
+            experimentalImportSupport: true,
+            inlineRequires: true,
+        },
+    }),
 };
 
 // ✅ NUEVO: Asegurar que los assets de fuentes se manejen correctamente
 config.resolver.assetExts = [
-  ...config.resolver.assetExts,
-  'ttf',
-  'otf',
-  'woff',
-  'woff2',
+    ...config.resolver.assetExts,
+    'ttf',
+    'otf',
+    'woff',
+    'woff2',
+    'svg', // Added for icons
+    'png',
+    'jpg',
 ];
 
 module.exports = withNativeWind(config, {
-  input: "./global.css",
-  // Force write CSS to file system instead of virtual modules
-  // This fixes iOS styling issues in development mode
-  forceWriteFileSystem: true,
+    input: "./global.css",
+    // Force write CSS to file system instead of virtual modules
+    // This fixes iOS styling issues in development mode
+    forceWriteFileSystem: true,
 });
