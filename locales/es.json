@@ -111,27 +111,6 @@
     "new_project": "Nuevo Proyecto",
     "fill_details": "Completa los detalles de tu proyecto"
   },
-  "settings": {
-    "title": "Configuración",
-    "language": "Idioma",
-    "appearance": "Apariencia",
-    "light_mode": "Modo Claro",
-    "dark_mode": "Modo Oscuro",
-    "auto_mode": "Automático",
-    "auto_mode_desc": "Sigue la configuración del sistema",
-    "data_backup": "Datos y Respaldo",
-    "export_projects": "Exportar Proyectos",
-    "export_projects_desc": "Guardar una copia de seguridad local",
-    "import_projects": "Importar Proyectos",
-    "import_projects_desc": "Restaurar desde una copia de seguridad",
-    "clear_cache": "Limpiar Caché",
-    "clear_cache_desc": "Libera espacio y reinicia datos temporales",
-    "about": "Acerca de",
-    "version": "Versión",
-    "app_description": "Herramienta profesional de análisis financiero.",
-    "view_tutorial": "Ver Tutorial",
-    "copyright": "© 2026 Crux Analytics. Todos los derechos reservados."
-  },
   "wizard": {
     "step1": {
       "subtitle": "Paso 1 de 10",
@@ -746,32 +725,6 @@
       "docs": "Documentación",
       "contact": "Contacto",
       "copyright": "© 2026 CruxAnalytics. Open Source & Free Forever."
-    }
-  },
-  "calculators": {
-    "break_even": {
-      "title": "Punto de Equilibrio",
-      "description": "¿Cuánto debes vender para no perder?"
-    },
-    "cash_flow": {
-      "title": "Flujo de Caja",
-      "description": "Proyección de ingresos y gastos 12 meses"
-    },
-    "pricing": {
-      "title": "Calculadora de Precios",
-      "description": "Calcula el precio óptimo"
-    },
-    "loan": {
-      "title": "Evaluador de Préstamos",
-      "description": "Compara opciones de financiamiento"
-    },
-    "employee_roi": {
-      "title": "ROI de Empleados",
-      "description": "¿Vale la pena contratar?"
-    },
-    "marketing_roi": {
-      "title": "ROI de Marketing",
-      "description": "Mide tu publicidad"
     }
   },
   "calculators": {

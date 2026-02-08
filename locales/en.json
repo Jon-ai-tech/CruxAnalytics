@@ -110,27 +110,6 @@
     "auto_saved": "Auto-saved",
     "project_name_placeholder": "e.g., Digital Transformation"
   },
-  "settings": {
-    "title": "Settings",
-    "language": "Language",
-    "appearance": "Appearance",
-    "light_mode": "Light Mode",
-    "dark_mode": "Dark Mode",
-    "auto_mode": "Automatic",
-    "auto_mode_desc": "Follow system settings",
-    "data_backup": "Data & Backup",
-    "export_projects": "Export Projects",
-    "export_projects_desc": "Save a local backup copy",
-    "import_projects": "Import Projects",
-    "import_projects_desc": "Restore from a backup",
-    "clear_cache": "Clear Cache",
-    "clear_cache_desc": "Free up space and reset temporary data",
-    "about": "About",
-    "version": "Version",
-    "app_description": "Professional financial analysis tool.",
-    "view_tutorial": "View Tutorial",
-    "copyright": "© 2026 Crux Analytics. All rights reserved."
-  },
   "wizard": {
     "step1": {
       "subtitle": "Step 1 of 10",
@@ -348,6 +327,10 @@
     "pdf_format_a4": "A4",
     "pdf_format_letter": "Letter",
     "include_charts": "Include Charts in PDF",
+    "light_mode": "Light Mode",
+    "dark_mode": "Dark Mode",
+    "auto_mode": "Automatic",
+    "auto_mode_desc": "Follow system settings",
     "data_backup": "Data and Backup",
     "export_projects": "Export Projects",
     "export_projects_desc": "Save all projects as JSON file",

@@ -147,8 +147,7 @@ function ToolCard({ icon, title, description, href, color, colors }: any) {
   return (
     <Pressable
       onPress={handlePress}
-      className="w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)] mb-4"
-      style={{ minWidth: 280 }}
+      className="w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-12px)]"
     >
       <View className="bg-surface border border-border rounded-2xl p-6 h-full">
         <View
@@ -325,7 +324,7 @@ export default function HomeScreen() {
             <Text className="text-2xl font-heading-medium text-foreground mb-4">
               {t('dashboard.tools_title')}
             </Text>
-            <View className="flex-row flex-wrap justify-between gap-4">
+            <View className="flex-row flex-wrap justify-start gap-4">
               {getToolCards(t).map(tool => (
                 <ToolCard key={tool.href} {...tool} colors={colors} />
               ))}
