@@ -38,9 +38,10 @@ config.resolver.assetExts = [
     'jpg',
 ];
 
+const isProduction = process.env.NODE_ENV === "production";
+
 module.exports = withNativeWind(config, {
     input: "./global.css",
-    // Force write CSS to file system instead of virtual modules
-    // This fixes iOS styling issues in development mode
-    forceWriteFileSystem: true,
+    // Disable forceWriteFileSystem in production to avoid SHA-1/Cache issues in CI
+    forceWriteFileSystem: !isProduction,
 });
