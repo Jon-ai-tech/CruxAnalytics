@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { View, Text, ScrollView, Pressable, Image, Platform } from 'react-native';
+import { View, Text, ScrollView, Pressable, Image, Platform, Linking } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -385,13 +385,20 @@ function Footer() {
                 </View>
 
                 <View className="flex-row gap-8">
-                    <Text className="text-gray-400 text-sm">{t('landing.footer.github')}</Text>
-                    <Text className="text-gray-400 text-sm">{t('landing.footer.docs')}</Text>
-                    <Text className="text-gray-400 text-sm">{t('landing.footer.contact')}</Text>
+                    <Pressable onPress={() => Linking.openURL('https://github.com/Jon-ai-tech/CruxAnalytics')}>
+                        <Text className="text-gray-400 text-sm hover:text-white transition-colors">
+                            {t('landing.footer.github')}
+                        </Text>
+                    </Pressable>
+                    <Pressable onPress={() => Linking.openURL('https://www.vanguardcrux.com/')}>
+                        <Text className="text-gray-400 text-sm hover:text-white transition-colors">
+                            {t('landing.footer.contact')}
+                        </Text>
+                    </Pressable>
                 </View>
 
                 <Text className="text-gray-600 text-sm">
-                    {t('landing.footer.copyright')}
+                    © 2026 CruxAnalytics. Open Source & Free Forever.
                 </Text>
             </View>
         </View>
