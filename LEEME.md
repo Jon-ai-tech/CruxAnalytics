@@ -3,6 +3,10 @@
 **Plataforma de diagnóstico financiero de grado empresarial para el análisis de casos de negocio.**
 Ahora de código abierto (Open Source) y gratuita para toda la comunidad.
 
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20Mobile-orange.svg)](https://expo.dev/)
+
 ---
 
 ## 📊 ¿Qué es CruxAnalytics?

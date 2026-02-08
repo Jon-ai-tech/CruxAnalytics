@@ -9,84 +9,91 @@ Now Open Source and free for everyone.
 
 ---
 
-## 📊 Overview
+## 📊 What is CruxAnalytics?
 
-CruxAnalytics is a modular financial engine designed for strategic business analysis. It helps entrepreneurs and financial analysts evaluate project viability through professional-grade metrics, sensitivity analysis, and automated reports.
+CruxAnalytics is a powerful financial engine designed for the strategic evaluation of business projects. Unlike traditional spreadsheets, Crux offers a modular structure based on world-class software engineering principles, allowing entrepreneurs, analysts, and innovation agencies to quantify the viability of their ideas with scientific precision.
 
-**Core Features:**
-- **Standard Metrics**: ROI, NPV, IRR, and Payback Period.
-- **Vanguard Metrics**: Operational Friction (OFI), Tech-Debt Drag (TFDI), and Strategic Efficiency (SER).
-- **Guest Mode**: Use all features without creating an account or logging in.
-- **Cross-Platform**: Optimized for Web browsers and Mobile (iOS/Android).
-- **Professional Reports**: Export Executive Summaries with charts and AI insights.
+The project was born under the premise of **"Clarity in Complexity"**, transforming raw financial data into actionable insights through industry-standard metrics and now-liberated proprietary methodologies.
 
 ---
 
-## ⭐ Key Metrics
+## 🎯 Why was it created?
 
-### **Proprietary Intelligence (Now Free)**
-- **OFI (Operational Friction Index)**: Quantifies cost of manual processes as % of revenue.
-- **TFDI (Tech-Debt Financial Drag Index)**: Measures financial impact of technical debt.
-- **SER (Strategic Efficiency Ratio)**: Evaluates capital efficiency for sustainable growth.
+This project was developed to solve three critical problems in business analysis:
 
----
-
-## 🏗️ Architecture
-
-Built on **SOLID principles** and **Domain-Driven Design (DDD)**:
-- **Domain Layer**: Pure business logic (Calculators, Entities).
-- **Application Layer**: Use cases (Scenario comparison, Report generation).
-- **Infrastructure**: Persistence (tRPC + Drizzle ORM), PDF Generation, and AI integration.
+1.  **Lack of Standards**: Automating the calculation of complex metrics (such as IRR through iterative algorithms) to avoid human error.
+2.  **Efficiency Invisibility**: Introducing **Vanguard Metrics** (OFI, TFDI, SER) to measure problems that traditional balance sheets often ignore, such as the cost of manual processes or the financial drag of technical debt.
+3.  **Local Predictive Analysis**: Creating a tool that allows for scenario simulations (Best/Worst case) privately, without sensitive data leaving the user's infrastructure.
 
 ---
 
-## 🚀 Quick Start
+## 🛠️ How does it work?
 
-### **Prerequisites**
-- [Node.js](https://nodejs.org/) 18+
-- [pnpm](https://pnpm.io/) 9+
+### Modular Architecture (DDD)
+CruxAnalytics uses an architecture based on **Domain-Driven Design (DDD)**, which clearly separates "business intelligence" from "technology":
 
-### **Installation**
+*   **Domain Layer**: Contains pure calculations (ROI, NPV, IRR). It is the heart of the system and does not depend on any database or interface.
+*   **Application Layer**: Manages use cases, such as comparing two different scenarios or generating a narrative diagnosis.
+*   **Infrastructure Layer**: Handles persistence (MySQL with Drizzle ORM), communication (tRPC), and PDF report generation.
 
-```bash
-# Clone the repository
-git clone https://github.com/TU_USUARIO/CruxAnalytics.git
-cd CruxAnalytics
-
-# Install dependencies
-pnpm install
-
-# Setup local database and environment
-pnpm setup
-```
-
-### **Run Development server**
-
-```bash
-# Start both server and web frontend
-pnpm dev
-```
+### Guest Mode (Frictionless)
+To maximize utility, the application implements an automatic **"Guest Mode"**. This allows any user to start creating and saving projects immediately without registering, using a default user ID in the backend.
 
 ---
 
-## 🧪 Testing & Quality
+## 📊 Included Metrics
 
-```bash
-# Run SME calculator precision tests
-pnpm test
+### 1. Standard Financials
+*   **ROI (Return on Investment)**: Percentage profitability of capital.
+*   **NPV (Net Present Value)**: Value of future flows discounted to the present.
+*   **IRR (Internal Rate of Return)**: Intrinsic profitability calculated with precision using the Newton-Raphson algorithm.
+*   **Payback Period**: Exact time in months to recover the investment.
 
-# Type checking
-pnpm check
-```
+### 2. Vanguard Metrics (Proprietary)
+*   **OFI (Operational Friction Index)**: Quantifies how much money the company loses by having manual processes instead of automated ones.
+*   **TFDI (Tech-Debt Drag)**: Measures the direct economic impact of maintaining old systems or poorly written code.
+*   **SER (Strategic Efficiency Ratio)**: Evaluates whether the company's growth is sustainable relative to its burn rate.
 
 ---
 
 ## 📦 Tech Stack
 
-- **Frontend**: React Native with Expo SDK 54 + NativeWind 4.
-- **Backend**: Node.js + Express + tRPC.
-- **Database**: MySQL with Drizzle ORM.
-- **AI Integration**: OpenAI (Optional for narrative insights).
+CruxAnalytics uses a modern and professional stack:
+
+*   **Frontend**: React Native with **Expo SDK 54**. Allows the app to work on iPhone, Android, and Web browsers with the same code.
+*   **Styling**: **NativeWind 4** (Tailwind CSS for mobile), enabling a "premium" and adaptable design.
+*   **Backend**: Node.js with **tRPC**, ensuring type safety from server to client.
+*   **Database**: **MySQL** managed by **Drizzle ORM** for ultra-fast and secure queries.
+*   **AI**: Optional integration with **OpenAI** to generate narrative diagnoses that explain the numbers in human language.
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+*   Node.js 18 or superior.
+*   pnpm (recommended) or npm.
+
+### Installation
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/Jon-ai-tech/CruxAnalytics.git
+cd CruxAnalytics
+
+# 2. Install dependencies
+pnpm install
+
+# 3. Setup environment and local database
+pnpm setup
+```
+
+### Execution
+
+```bash
+# Start server and web interface simultaneously
+pnpm dev
+```
 
 ---
 
@@ -98,17 +105,11 @@ pnpm check
 
 ---
 
-## 🤝 Contributing
-
-We welcome contributions! Feel free to open an issue or submit a pull request to improve the calculators or UI.
-
----
-
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License**. You are free to use, modify, and distribute it, even for commercial purposes. See the [LICENSE](LICENSE) file for details.
 
 ---
 
-**Built with ❤️ by the Vanguard Crux community.**
+**Built with excellence by the Vanguard Crux community.**
 *Transforming complexity into competitive advantages.*
