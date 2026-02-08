@@ -6,6 +6,11 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise((resolve) => {
@@ -80,6 +85,19 @@ async function startServer() {
       createContext,
     }),
   );
+
+  // Serve static files from the 'web' directory
+  const webPath = path.join(__dirname, "web");
+  app.use(express.static(webPath));
+
+  // Wildcard route to serve index.html for client-side routing
+  app.get("*", (req, res, next) => {
+    // Skip if it's an API route that somehow wasn't caught
+    if (req.path.startsWith("/api")) {
+      return next();
+    }
+    res.sendFile(path.join(webPath, "index.html"));
+  });
 
   const preferredPort = parseInt(process.env.PORT || "3000");
   const port = await findAvailablePort(preferredPort);
