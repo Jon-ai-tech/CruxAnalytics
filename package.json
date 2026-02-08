@@ -2,10 +2,14 @@
   "name": "app-template",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "main": "expo-router/entry",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "concurrently -k \"pnpm dev:server\" \"pnpm dev:metro\"",
-    "dev:server": "cross-env NODE_ENV=development tsx watch server/_core/index.ts",
+    "dev:server": "cross-env NODE_ENV=development tsx server/_core/index.ts",
     "dev:metro": "npx expo start --web --port ${EXPO_PORT:-8081}",
     "build": "esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "start": "NODE_ENV=production node dist/index.js",

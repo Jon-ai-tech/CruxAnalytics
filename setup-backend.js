@@ -208,8 +208,8 @@ async function setupRailwayDatabase() {
     process.platform === 'darwin'
       ? 'open'
       : process.platform === 'win32'
-      ? 'start'
-      : 'xdg-open';
+        ? 'start'
+        : 'xdg-open';
 
   try {
     execCommand(`${openCommand} ${railwayUrl}`, { ignoreError: true });
@@ -332,7 +332,7 @@ ENABLE_PDF_EXPORT="true"
 
   addStep('Create .env File', 'success', { path: envPath });
   logSuccess('.env file created successfully!');
-  
+
   if (!openaiKey) {
     logWarning('OPENAI_API_KEY not set. AI features will be disabled.');
     logInfo('You can add it later to .env file');
@@ -381,7 +381,7 @@ function verifyCriticalDependencies() {
         silent: true,
         ignoreError: true,
       });
-      
+
       if (version && version.includes(dep)) {
         logSuccess(`${dep}: installed`);
       } else {
@@ -411,7 +411,7 @@ function generateMigrations() {
 
   try {
     execCommand('pnpm drizzle-kit generate', { stdio: 'inherit' });
-    
+
     // Check if migration files were created
     const migrationsDir = path.join(process.cwd(), 'drizzle', 'migrations');
     if (fileExists(migrationsDir)) {
@@ -424,8 +424,8 @@ function generateMigrations() {
   } catch (error) {
     // Migration generation might fail if files already exist - that's OK
     logWarning('Migration generation encountered issues (may already exist)');
-    addStep('Generate Migrations', 'warning', { 
-      message: 'Files may already exist' 
+    addStep('Generate Migrations', 'warning', {
+      message: 'Files may already exist'
     });
   }
 }
@@ -440,22 +440,22 @@ async function applyMigrations() {
 
   try {
     execCommand('pnpm drizzle-kit push', { stdio: 'inherit' });
-    
+
     addStep('Apply Migrations', 'success');
     logSuccess('Migrations applied successfully!');
-    
+
     return true;
   } catch (error) {
     logError('Failed to apply migrations');
     logError('Error: ' + error.message);
-    
+
     addStep('Apply Migrations', 'failed', { error: error.message });
-    
+
     // Ask if they want to continue anyway
     const answer = await askQuestion(
       '\n⚠️  Migration failed. Continue anyway? (y/N): '
     );
-    
+
     return answer.toLowerCase() === 'y';
   }
 }
@@ -466,49 +466,49 @@ async function applyMigrations() {
 
 async function verifyDatabaseSchema() {
   logStep(9, 10, 'Verifying database schema...');
-  
+
   logInfo('Starting Drizzle Studio to verify tables...');
   logInfo('This will open http://localhost:4983 in your browser');
-  
+
   // Start drizzle studio in background
   const studioProcess = spawn('pnpm', ['drizzle-kit', 'studio'], {
     detached: true,
     stdio: 'ignore',
   });
-  
+
   // Wait for studio to start
   await sleep(3000);
-  
+
   // Open in browser
   const studioUrl = 'http://localhost:4983';
   const openCommand =
     process.platform === 'darwin'
       ? 'open'
       : process.platform === 'win32'
-      ? 'start'
-      : 'xdg-open';
+        ? 'start'
+        : 'xdg-open';
 
   try {
     execCommand(`${openCommand} ${studioUrl}`, { ignoreError: true });
   } catch (error) {
     logWarning('Could not open browser. Please visit: ' + studioUrl);
   }
-  
+
   log('\n📊 Drizzle Studio opened. Please verify:');
   log('   1. Table "users" exists');
   log('   2. Table "projects" exists (NEW)');
   log('   3. Table "scenarios" exists (NEW)');
   log('\n   Press Enter when you\'re done verifying...\n');
-  
+
   await askQuestion('');
-  
+
   // Kill studio process
   try {
     process.kill(-studioProcess.pid);
   } catch (error) {
     // Ignore error if already killed
   }
-  
+
   addStep('Verify Database Schema', 'success');
   logSuccess('Database schema verified!');
 }
@@ -519,44 +519,44 @@ async function verifyDatabaseSchema() {
 
 function runTests() {
   logStep(10, 10, 'Running tests...');
-  
+
   try {
-    const output = execCommand('pnpm test', { 
+    const output = execCommand('pnpm test', {
       stdio: 'pipe',
       encoding: 'utf-8',
     });
-    
+
     // Parse test results
     const passedMatch = output.match(/(\d+) passed/);
     const failedMatch = output.match(/(\d+) failed/);
     const skippedMatch = output.match(/(\d+) skipped/);
-    
+
     const passed = passedMatch ? parseInt(passedMatch[1]) : 0;
     const failed = failedMatch ? parseInt(failedMatch[1]) : 0;
     const skipped = skippedMatch ? parseInt(skippedMatch[1]) : 0;
     const total = passed + failed + skipped;
-    
+
     logSuccess(`Tests: ${passed}/${total} passed`);
-    
+
     if (failed > 0) {
       logWarning(`${failed} test(s) failed`);
     }
-    
+
     if (skipped > 0) {
       logInfo(`${skipped} test(s) skipped (likely OpenAI - OK)`);
     }
-    
+
     addStep('Run Tests', failed === 0 ? 'success' : 'warning', {
       total,
       passed,
       failed,
       skipped,
     });
-    
+
   } catch (error) {
     logWarning('Some tests failed (may be OK if OpenAI key missing)');
-    addStep('Run Tests', 'warning', { 
-      message: 'Some tests failed - check output above' 
+    addStep('Run Tests', 'warning', {
+      message: 'Some tests failed - check output above'
     });
   }
 }
@@ -569,20 +569,20 @@ function generateDeploymentReport() {
   log('\n' + '='.repeat(60));
   log('📊 GENERATING DEPLOYMENT REPORT', 'bright');
   log('='.repeat(60) + '\n');
-  
+
   const duration = Math.floor((Date.now() - deploymentState.startTime) / 1000);
   const minutes = Math.floor(duration / 60);
   const seconds = duration % 60;
-  
+
   const successCount = deploymentState.steps.filter(s => s.status === 'success').length;
   const failedCount = deploymentState.steps.filter(s => s.status === 'failed').length;
   const warningCount = deploymentState.steps.filter(s => s.status === 'warning').length;
   const totalSteps = deploymentState.steps.length;
-  
-  const overallStatus = failedCount > 0 ? 'PARTIAL' : 
-                       warningCount > 0 ? 'SUCCESS (with warnings)' : 
-                       'SUCCESS';
-  
+
+  const overallStatus = failedCount > 0 ? 'PARTIAL' :
+    warningCount > 0 ? 'SUCCESS (with warnings)' :
+      'SUCCESS';
+
   const report = `
 === CRUXANALYTICS DEPLOYMENT REPORT ===
 Date: ${new Date().toISOString()}
@@ -592,13 +592,13 @@ Status: ${overallStatus}
 ✅ COMPLETED TASKS (${successCount}/${totalSteps}):
 
 ${deploymentState.steps
-  .map((step, i) => {
-    const icon = step.status === 'success' ? '✅' : 
-                 step.status === 'failed' ? '❌' : 
-                 step.status === 'warning' ? '⚠️' : '⊘';
-    return `${i + 1}. ${icon} ${step.name}`;
-  })
-  .join('\n')}
+      .map((step, i) => {
+        const icon = step.status === 'success' ? '✅' :
+          step.status === 'failed' ? '❌' :
+            step.status === 'warning' ? '⚠️' : '⊘';
+        return `${i + 1}. ${icon} ${step.name}`;
+      })
+      .join('\n')}
 
 === CREDENTIALS (KEEP SECURE) ===
 DATABASE_URL: ${maskCredential(deploymentState.credentials.DATABASE_URL || 'Not set')}
@@ -630,17 +630,17 @@ OPENAI_API_KEY: ${deploymentState.credentials.OPENAI_API_KEY ? 'Set ✅' : 'Not 
 ${failedCount > 0 ? `
 ⚠️  ERRORS ENCOUNTERED:
 ${deploymentState.steps
-  .filter(s => s.status === 'failed')
-  .map(s => `   - ${s.name}: ${s.details.error || 'Unknown error'}`)
-  .join('\n')}
+        .filter(s => s.status === 'failed')
+        .map(s => `   - ${s.name}: ${s.details.error || 'Unknown error'}`)
+        .join('\n')}
 ` : 'No critical errors ✅'}
 
 ${warningCount > 0 ? `
 ⚠️  WARNINGS:
 ${deploymentState.steps
-  .filter(s => s.status === 'warning')
-  .map(s => `   - ${s.name}: ${s.details.message || 'See logs'}`)
-  .join('\n')}
+        .filter(s => s.status === 'warning')
+        .map(s => `   - ${s.name}: ${s.details.message || 'See logs'}`)
+        .join('\n')}
 ` : ''}
 
 === SUPPORT ===
@@ -656,12 +656,12 @@ Report generated by: CruxAnalytics Automated Setup
   // Write report to file
   const reportPath = path.join(process.cwd(), 'deployment-report.txt');
   writeFile(reportPath, report);
-  
+
   // Print to console
   log(report);
-  
+
   logSuccess(`\n📄 Full report saved to: ${reportPath}`);
-  
+
   return overallStatus;
 }
 
@@ -674,10 +674,10 @@ async function main() {
     log('\n' + '='.repeat(60), 'bright');
     log('🚀 CRUXANALYTICS AUTOMATED BACKEND SETUP', 'bright');
     log('='.repeat(60) + '\n', 'bright');
-    
+
     logInfo('This script will set up your complete backend infrastructure');
     logInfo('Estimated time: 2-3 minutes\n');
-    
+
     // Execute all steps
     await checkPrerequisites();
     const databaseUrl = await setupRailwayDatabase();
@@ -687,18 +687,18 @@ async function main() {
     verifyCriticalDependencies();
     generateMigrations();
     const migrationsOk = await applyMigrations();
-    
+
     if (migrationsOk) {
       await verifyDatabaseSchema();
     } else {
       logWarning('Skipping schema verification due to migration issues');
     }
-    
+
     runTests();
-    
+
     // Generate final report
     const status = generateDeploymentReport();
-    
+
     // Final message
     log('\n' + '='.repeat(60), 'bright');
     if (status === 'SUCCESS') {
@@ -709,26 +709,26 @@ async function main() {
       log('⚠️  DEPLOYMENT PARTIALLY COMPLETED', 'yellow');
     }
     log('='.repeat(60) + '\n', 'bright');
-    
+
     logInfo('Next: Start your servers with:');
     log('  Terminal 1: pnpm dev:server');
     log('  Terminal 2: pnpm start\n');
-    
+
   } catch (error) {
     log('\n' + '='.repeat(60), 'red');
     logError('DEPLOYMENT FAILED');
     log('='.repeat(60) + '\n', 'red');
-    
+
     logError('Error: ' + error.message);
-    
+
     if (error.stack) {
       logInfo('\nStack trace:');
       console.error(error.stack);
     }
-    
+
     addStep('Deployment', 'failed', { error: error.message });
     generateDeploymentReport();
-    
+
     process.exit(1);
   }
 }
