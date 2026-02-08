@@ -403,16 +403,16 @@ export default function NewProjectScreen() {
       component: (
         <View className="gap-4">
           <WizardInput
-            question="Horas manuales / semana"
-            helper="¿Cuánto tiempo pierdes en tareas manuales?"
+            question={language === 'es' ? "Horas manuales / semana" : "Manual hours / week"}
+            helper={t('wizard.step8.helper')}
             value={manualHours}
             onChangeText={setManualHours}
             placeholder="15"
             keyboardType="numeric"
           />
           <WizardInput
-            question="Costo promedio / hora ($)"
-            helper="Costo laboral promedio"
+            question={language === 'es' ? "Costo promedio / hora ($)" : "Average cost / hour ($)"}
+            helper={language === 'es' ? "Costo laboral promedio" : "Average labor cost"}
             value={hourlyCost}
             onChangeText={setHourlyCost}
             placeholder="45"
@@ -430,16 +430,16 @@ export default function NewProjectScreen() {
       component: (
         <View className="gap-4">
           <WizardInput
-            question="Horas de mantenimiento / sprint"
-            helper="Tiempo dedicado a bugs y 'technical debt'"
+            question={language === 'es' ? "Horas de mantenimiento / sprint" : "Maintenance hours / sprint"}
+            helper={t('wizard.step9.helper')}
             value={maintHours}
             onChangeText={setMaintHours}
             placeholder="20"
             keyboardType="numeric"
           />
           <WizardInput
-            question="Horas totales del equipo / sprint"
-            helper="Capacidad total de desarrollo"
+            question={language === 'es' ? "Horas totales del equipo / sprint" : "Total team hours / sprint"}
+            helper={language === 'es' ? "Capacidad total de desarrollo" : "Total development capacity"}
             value={totalSprintHours}
             onChangeText={setTotalSprintHours}
             placeholder="80"
@@ -457,16 +457,16 @@ export default function NewProjectScreen() {
       component: (
         <View className="gap-4">
           <WizardInput
-            question="Ingresos Periodo Anterior ($)"
-            helper="Para medir eficiencia de crecimiento"
+            question={language === 'es' ? "Ingresos Periodo Anterior ($)" : "Previous Period Revenue ($)"}
+            helper={t('wizard.step10.helper')}
             value={prevRevenue}
             onChangeText={setPrevRevenue}
             placeholder="50000"
             keyboardType="numeric"
           />
           <WizardInput
-            question="Gastos Periodo Anterior ($)"
-            helper="Para medir 'burn rate' relativo"
+            question={language === 'es' ? "Gastos Periodo Anterior ($)" : "Previous Period Expenses ($)"}
+            helper={language === 'es' ? "Para medir 'burn rate' relativo" : "To measure relative burn rate"}
             value={prevBurnRate}
             onChangeText={setPrevBurnRate}
             placeholder="40000"

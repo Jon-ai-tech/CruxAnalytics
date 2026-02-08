@@ -173,7 +173,7 @@
     },
     "step8": {
       "subtitle": "Paso 8 de 10",
-      "question": "Fricción Operativa",
+      "question": "Fricción Operativa (OFI)",
       "helper": "Horas manuales por semana y costo por hora",
       "placeholder": "15",
       "help": "Consejo: Calcula cuánto tiempo pasas haciendo tareas que podrían automatizarse"
