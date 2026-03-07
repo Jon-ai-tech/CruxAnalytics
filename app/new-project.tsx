@@ -620,6 +620,9 @@ export default function NewProjectScreen() {
 
       // Emit event to refresh other screens
       eventEmitter.emit(Events.PROJECT_CREATED, savedId);
+      
+      // Small delay to ensure event is processed
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       // Schedule reminder if notifications are enabled
       if (notificationsAvailable && reminderFrequency !== 'none') {
