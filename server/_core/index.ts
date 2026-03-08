@@ -72,6 +72,10 @@ async function startServer() {
     res.json({ ok: true, timestamp: Date.now(), version: "4.5.0" });
   });
 
+  // Serve static files from the 'web' directory
+  const webPath = path.join(__dirname, "..", "web");
+  app.use(express.static(webPath));
+
   // API documentation (Swagger UI)
   // In production the files land in dist/web (via `expo export`).
   // In development they live in public/.
@@ -98,10 +102,6 @@ async function startServer() {
       createContext,
     }),
   );
-
-  // Serve static files from the 'web' directory
-  const webPath = path.join(__dirname, "web");
-  app.use(express.static(webPath));
 
   // Wildcard route to serve index.html for client-side routing
   app.get("*", (req, res, next) => {
