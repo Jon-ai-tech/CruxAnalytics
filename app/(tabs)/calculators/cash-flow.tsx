@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, Alert, Platform } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Alert, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
     GlassCard,
@@ -52,6 +52,7 @@ function InputField({
 function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; netCash: number; balance: number }> }) {
     const { t } = useTranslation();
     const maxBalance = Math.max(...forecasts.map(f => Math.abs(f.balance)));
+    const small = Dimensions.get('window').width < 600;
 
     return (
         <GlassCard>
@@ -64,11 +65,11 @@ function CashFlowTimeline({ forecasts }: { forecasts: Array<{ month: number; net
                         const isPositive = forecast.balance >= 0;
 
                         return (
-                            <View key={index} className="items-center" style={Platform.select({ web: { width: 64 }, default: { width: 48 } })}>
+                            <View key={index} className="items-center" style={{ width: small ? 48 : 64 }}>
                                 {/* Bar */}
                                 <View
                                     className="justify-end bg-slate-800 rounded-lg overflow-hidden"
-                                    style={Platform.select({ web: { height: 128, width: 32 }, default: { height: 56, width: 20 } })}
+                                    style={{ height: small ? 56 : 128, width: small ? 20 : 32 }}
                                 >
                                     <View
                                         className={`w-full rounded-t-lg ${isPositive ? 'bg-[#86EFAC]' : 'bg-[#FB923C]'}`}
