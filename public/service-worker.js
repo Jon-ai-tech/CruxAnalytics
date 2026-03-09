@@ -1,8 +1,8 @@
 // Business Case Analyzer Pro - Service Worker
-// Version 1.0.0
+// Version 2.0.0 - Network First for scripts to ensure fresh deploys
 
-const CACHE_NAME = 'bca-pro-v1';
-const RUNTIME_CACHE = 'bca-pro-runtime';
+const CACHE_NAME = 'bca-pro-v2';
+const RUNTIME_CACHE = 'bca-pro-runtime-v2';
 
 // Assets críticos para precachear
 const PRECACHE_ASSETS = [
@@ -15,8 +15,8 @@ const PRECACHE_ASSETS = [
 
 // Instalación: precachear assets críticos
 self.addEventListener('install', (event) => {
-  console.log('[Service Worker] Installing...');
-  
+  console.log('[Service Worker] Installing v2.0.0...');
+
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
@@ -29,8 +29,8 @@ self.addEventListener('install', (event) => {
 
 // Activación: limpiar cachés antiguas
 self.addEventListener('activate', (event) => {
-  console.log('[Service Worker] Activating...');
-  
+  console.log('[Service Worker] Activating v2.0.0...');
+
   event.waitUntil(
     caches.keys()
       .then((cacheNames) => {
@@ -64,10 +64,15 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Estrategia: Cache First para assets estáticos
+  // Estrategia: Network First para scripts JS (bundle de la app)
+  // CRITICAL: Never cache-first JS bundles or updates won't be seen
+  if (request.destination === 'script') {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
+  // Estrategia: Cache First para imágenes y fuentes (no cambian con deploys)
   if (
-    request.destination === 'style' ||
-    request.destination === 'script' ||
     request.destination === 'image' ||
     request.destination === 'font'
   ) {
@@ -75,9 +80,10 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Estrategia: Network First para HTML y datos dinámicos
+  // Estrategia: Network First para HTML, CSS y datos dinámicos
   if (
     request.destination === 'document' ||
+    request.destination === 'style' ||
     url.pathname.startsWith('/api')
   ) {
     event.respondWith(networkFirst(request));
@@ -92,29 +98,28 @@ self.addEventListener('fetch', (event) => {
 async function cacheFirst(request) {
   const cache = await caches.open(CACHE_NAME);
   const cached = await cache.match(request);
-  
+
   if (cached) {
-    console.log('[Service Worker] Cache hit:', request.url);
     return cached;
   }
 
   try {
     const response = await fetch(request);
-    
+
     if (response.ok) {
       cache.put(request, response.clone());
     }
-    
+
     return response;
   } catch (error) {
     console.error('[Service Worker] Fetch failed:', error);
-    
+
     // Retornar página offline si está disponible
     const offlinePage = await cache.match('/offline.html');
     if (offlinePage) {
       return offlinePage;
     }
-    
+
     throw error;
   }
 }
@@ -122,24 +127,24 @@ async function cacheFirst(request) {
 // Estrategia Network First: intentar red primero, luego caché
 async function networkFirst(request) {
   const cache = await caches.open(RUNTIME_CACHE);
-  
+
   try {
     const response = await fetch(request);
-    
+
     if (response.ok) {
       cache.put(request, response.clone());
     }
-    
+
     return response;
   } catch (error) {
     console.log('[Service Worker] Network failed, trying cache:', request.url);
-    
+
     const cached = await cache.match(request);
-    
+
     if (cached) {
       return cached;
     }
-    
+
     // Si es un documento HTML, retornar página offline
     if (request.destination === 'document') {
       const offlinePage = await caches.open(CACHE_NAME).then(c => c.match('/offline.html'));
@@ -147,7 +152,7 @@ async function networkFirst(request) {
         return offlinePage;
       }
     }
-    
+
     throw error;
   }
 }
@@ -157,7 +162,7 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
-  
+
   if (event.data && event.data.type === 'CLEAR_CACHE') {
     event.waitUntil(
       caches.keys().then((cacheNames) => {
@@ -178,8 +183,6 @@ self.addEventListener('sync', (event) => {
 
 async function syncProjects() {
   console.log('[Service Worker] Syncing projects...');
-  // Aquí se podría implementar sincronización con servidor
-  // Por ahora, solo log
 }
 
-console.log('[Service Worker] Loaded successfully');
+console.log('[Service Worker] v2.0.0 loaded successfully');
