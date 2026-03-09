@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, Alert, Platform } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Alert, Dimensions, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -121,13 +121,14 @@ function BreakEvenChart({
     const maxUnits = Math.max(breakEvenUnits * 1.5, currentUnits || 0);
     const breakEvenPercent = (breakEvenUnits / maxUnits) * 100;
     const currentPercent = currentUnits ? (currentUnits / maxUnits) * 100 : null;
+    const barHeight = Dimensions.get('window').width < 600 ? 20 : 32;
 
     return (
         <GlassCard className="p-4">
             <Text className="text-white font-semibold mb-3">{t('calculators.break_even.visualization')}</Text>
 
             {/* Chart Bar */}
-            <View className="bg-slate-800 rounded-full overflow-hidden relative" style={Platform.select({ web: { height: 32 }, default: { height: 20 } })}>
+            <View className="bg-slate-800 rounded-full overflow-hidden relative" style={{ height: barHeight }}>
                 {/* Loss zone */}
                 <View
                     className="absolute left-0 top-0 bottom-0 bg-[#FB923C]/30"
