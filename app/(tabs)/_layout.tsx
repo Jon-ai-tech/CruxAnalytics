@@ -20,6 +20,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: colors.primary,
         headerShown: false,
         lazy: false,
+        animation: 'none',
         tabBarButton: HapticTab,
         tabBarStyle: {
           paddingTop: 8,
