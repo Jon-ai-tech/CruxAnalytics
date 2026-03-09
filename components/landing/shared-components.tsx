@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { View, Text, Pressable, Animated } from 'react-native';
+import { View, Text, Pressable, Animated, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 /**
@@ -19,11 +19,14 @@ export function GlassCard({
     className?: string;
     gradient?: boolean;
 }) {
+    const isSmall = Dimensions.get('window').width < 600;
+    const paddingClass = className.includes('p-') ? '' : (isSmall ? 'p-4' : 'p-6');
+
     return (
         <View
             style={{ borderRadius: 16 }}
             className={`
-        rounded-2xl p-6
+        rounded-2xl ${paddingClass}
         bg-white/5 backdrop-blur-xl
         border border-white/10
         shadow-2xl shadow-black/20
@@ -178,16 +181,18 @@ export function SectionHeading({
     subtitle?: string;
     centered?: boolean;
 }) {
+    const isSmall = Dimensions.get('window').width < 600;
+
     return (
-        <View className={`mb-8 w-full ${centered ? 'items-center' : ''}`}>
+        <View className={`${isSmall ? 'mb-4' : 'mb-8'} w-full ${centered ? 'items-center' : ''}`}>
             <Text
-                className={`text-3xl font-bold text-white ${centered ? 'text-center' : ''}`}
+                className={`${isSmall ? 'text-2xl' : 'text-3xl'} font-bold text-white ${centered ? 'text-center' : ''}`}
             >
                 {title}
             </Text>
             {subtitle && (
                 <Text
-                    className={`text-gray-400 text-base mt-2 ${centered ? 'text-center' : ''}`}
+                    className={`text-gray-400 ${isSmall ? 'text-sm' : 'text-base'} mt-2 ${centered ? 'text-center' : ''}`}
                 >
                     {subtitle}
                 </Text>
