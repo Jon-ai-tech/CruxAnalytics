@@ -208,12 +208,16 @@ function FeaturesSection() {
                 />
                 
                 <View style={{
-                    flexDirection: isSmall ? 'column' : 'row',
+                    flexDirection: 'row',
                     flexWrap: 'wrap',
-                    gap: 24,
+                    gap: isSmall ? 16 : 32,
+                    justifyContent: 'space-between',
                 }}>
                     {features.map((f, i) => (
-                        <View key={i} style={{ flex: isSmall ? 1 : 0.3 }}>
+                        <View key={i} style={{ 
+                            width: isSmall ? '100%' : 'calc(33.333% - 22px)',
+                            marginBottom: isSmall ? 0 : 8,
+                        }}>
                             <FeatureCard {...f} />
                         </View>
                     ))}
