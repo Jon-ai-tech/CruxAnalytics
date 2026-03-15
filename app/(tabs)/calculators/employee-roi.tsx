@@ -24,7 +24,7 @@ function InputField({
         <View className="mb-4">
             <Text className="text-gray-300 font-medium mb-2">{label}</Text>
             <View className="flex-row items-center bg-slate-800 rounded-xl border border-white/10 overflow-hidden">
-                {prefix && <Text className="text-gray-500 pl-4">{prefix}</Text>}
+                {prefix && <Text className="text-gray-400 pl-4">{prefix}</Text>}
                 <TextInput
                     className="flex-1 px-4 py-3 text-white text-lg"
                     value={value}
@@ -32,9 +32,9 @@ function InputField({
                     placeholderTextColor="#6b7280"
                     keyboardType="numeric"
                 />
-                {suffix && <Text className="text-gray-500 pr-4">{suffix}</Text>}
+                {suffix && <Text className="text-gray-400 pr-4">{suffix}</Text>}
             </View>
-            {hint && <Text className="text-gray-500 text-xs mt-1">{hint}</Text>}
+            {hint && <Text className="text-gray-400 text-xs mt-1">{hint}</Text>}
         </View>
     );
 }
@@ -284,7 +284,7 @@ export default function EmployeeROIPage() {
                                         <Text className="text-2xl font-bold text-white">
                                             ${result.totalCost.toLocaleString()}
                                         </Text>
-                                        <Text className="text-gray-500 text-xs">{t('calculators.employee_roi.first_year')}</Text>
+                                        <Text className="text-gray-400 text-xs">{t('calculators.employee_roi.first_year')}</Text>
                                     </GlassCard>
 
                                     <GlassCard className="flex-1 min-w-[140px]">
@@ -292,7 +292,7 @@ export default function EmployeeROIPage() {
                                         <Text className={`text-2xl font-bold ${result.netContribution >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                                             ${result.netContribution.toLocaleString()}
                                         </Text>
-                                        <Text className="text-gray-500 text-xs">{t('calculators.employee_roi.revenue_minus_cost')}</Text>
+                                        <Text className="text-gray-400 text-xs">{t('calculators.employee_roi.revenue_minus_cost')}</Text>
                                     </GlassCard>
 
                                     <GlassCard className="flex-1 min-w-[140px]">
@@ -300,7 +300,7 @@ export default function EmployeeROIPage() {
                                         <Text className="text-2xl font-bold text-indigo-400">
                                             ${result.revenuePerDollarSpent != null ? result.revenuePerDollarSpent.toFixed(2) : '0.00'}
                                         </Text>
-                                        <Text className="text-gray-500 text-xs">{t('calculators.employee_roi.return')}</Text>
+                                        <Text className="text-gray-400 text-xs">{t('calculators.employee_roi.return')}</Text>
                                     </GlassCard>
                                 </View>
 
@@ -327,7 +327,7 @@ export default function EmployeeROIPage() {
                                             <Badge variant={result.benchmarkComparison.productivityLevel === 'high' ? 'success' : result.benchmarkComparison.productivityLevel === 'low' ? 'danger' : 'warning'}>
                                                 {`${t('calculators.employee_roi.productivity_label')} ${t(`calculators.employee_roi.productivity_levels.${result.benchmarkComparison.productivityLevel}`)}`}
                                             </Badge>
-                                            <Text className="text-gray-500 text-xs">{t('calculators.employee_roi.vs_industry')}</Text>
+                                            <Text className="text-gray-400 text-xs">{t('calculators.employee_roi.vs_industry')}</Text>
                                         </View>
                                     </View>
                                 </GlassCard>

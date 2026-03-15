@@ -84,7 +84,7 @@ export function BreakEvenChart({ data }: BreakEvenChartProps) {
                 y1={y}
                 x2={chartWidth - padding.right}
                 y2={y}
-                stroke="#E5E7EB"
+                stroke="rgba(255,255,255,0.08)"
                 strokeWidth="1"
                 strokeDasharray="4 4"
               />
@@ -97,7 +97,7 @@ export function BreakEvenChart({ data }: BreakEvenChartProps) {
             y1={padding.top}
             x2={padding.left}
             y2={chartHeight - padding.bottom}
-            stroke="#333"
+            stroke="rgba(255,255,255,0.3)"
             strokeWidth="2"
           />
 
@@ -107,7 +107,7 @@ export function BreakEvenChart({ data }: BreakEvenChartProps) {
             y1={chartHeight - padding.bottom}
             x2={chartWidth - padding.right}
             y2={chartHeight - padding.bottom}
-            stroke="#333"
+            stroke="rgba(255,255,255,0.3)"
             strokeWidth="2"
           />
 
@@ -120,7 +120,7 @@ export function BreakEvenChart({ data }: BreakEvenChartProps) {
                 x={padding.left - 10}
                 y={y + 4}
                 fontSize="10"
-                fill="#666"
+                fill="#9CA3AF"
                 textAnchor="end"
               >
                 ${(tick / 1000).toFixed(0)}k
@@ -137,7 +137,7 @@ export function BreakEvenChart({ data }: BreakEvenChartProps) {
                 x={x}
                 y={chartHeight - padding.bottom + 20}
                 fontSize="10"
-                fill="#666"
+                fill="#9CA3AF"
                 textAnchor="middle"
               >
                 {month}
@@ -150,7 +150,7 @@ export function BreakEvenChart({ data }: BreakEvenChartProps) {
             x={padding.left + plotWidth / 2}
             y={chartHeight - 5}
             fontSize="12"
-            fill="#333"
+            fill="#9CA3AF"
             textAnchor="middle"
             fontWeight="600"
           >
@@ -162,7 +162,7 @@ export function BreakEvenChart({ data }: BreakEvenChartProps) {
             x={15}
             y={padding.top + plotHeight / 2}
             fontSize="12"
-            fill="#333"
+            fill="#9CA3AF"
             textAnchor="middle"
             fontWeight="600"
             transform={`rotate(-90, 15, ${padding.top + plotHeight / 2})`}

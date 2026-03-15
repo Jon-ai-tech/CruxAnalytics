@@ -88,7 +88,7 @@ export function RadarChart({
             key={`grid-${lvl}`}
             points={gridPoints(lvl + 1)}
             fill="none"
-            stroke="#334155"
+            stroke="rgba(255,255,255,0.15)"
             strokeWidth={0.8}
             opacity={0.6}
           />
@@ -104,7 +104,7 @@ export function RadarChart({
               y1={cy}
               x2={x}
               y2={y}
-              stroke="#334155"
+              stroke="rgba(255,255,255,0.15)"
               strokeWidth={0.8}
               opacity={0.6}
             />

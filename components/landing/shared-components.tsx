@@ -9,17 +9,25 @@ function useIsSmall() {
     return Dimensions.get('window').width < 768;
 }
 
-export function Badge({ children, variant = 'default' }: { children: React.ReactNode, variant?: 'default' | 'success' }) {
+const BADGE_STYLES: Record<string, { bg: string; border: string; color: string }> = {
+    success: { bg: 'rgba(167, 243, 208, 0.1)', border: 'rgba(167, 243, 208, 0.2)', color: '#86EFAC' },
+    warning: { bg: 'rgba(251, 191, 36, 0.1)', border: 'rgba(251, 191, 36, 0.2)', color: '#FCD34D' },
+    danger:  { bg: 'rgba(252, 165, 165, 0.1)', border: 'rgba(252, 165, 165, 0.2)', color: '#FCA5A5' },
+    default: { bg: 'rgba(255, 255, 255, 0.05)', border: 'rgba(255, 255, 255, 0.1)', color: 'rgba(255,255,255,0.85)' },
+};
+
+export function Badge({ children, variant = 'default' }: { children: React.ReactNode, variant?: 'default' | 'success' | 'warning' | 'danger' }) {
+    const s = BADGE_STYLES[variant] ?? BADGE_STYLES.default;
     return (
         <View style={{
-            backgroundColor: variant === 'success' ? 'rgba(167, 243, 208, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+            backgroundColor: s.bg,
             paddingHorizontal: 12,
             paddingVertical: 6,
             borderRadius: 100,
             borderWidth: 1,
-            borderColor: variant === 'success' ? 'rgba(167, 243, 208, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+            borderColor: s.border,
         }}>
-            {children}
+            <Text style={{ color: s.color, fontSize: 12, fontWeight: '600' }}>{children}</Text>
         </View>
     );
 }
