@@ -38,7 +38,7 @@ function InputField({
             <Text className="text-gray-300 font-medium mb-2">{label}</Text>
             <View className="flex-row items-center bg-slate-800 rounded-xl border border-white/10 overflow-hidden">
                 {prefix && (
-                    <Text className="text-gray-500 pl-4">{prefix}</Text>
+                    <Text className="text-gray-400 pl-4">{prefix}</Text>
                 )}
                 <TextInput
                     className="flex-1 px-4 py-3 text-white text-lg"
@@ -49,10 +49,10 @@ function InputField({
                     keyboardType="numeric"
                 />
                 {suffix && (
-                    <Text className="text-gray-500 pr-4">{suffix}</Text>
+                    <Text className="text-gray-400 pr-4">{suffix}</Text>
                 )}
             </View>
-            {hint && <Text className="text-gray-500 text-xs mt-1">{hint}</Text>}
+            {hint && <Text className="text-gray-400 text-xs mt-1">{hint}</Text>}
         </View>
     );
 }
@@ -151,15 +151,15 @@ function BreakEvenChart({
             <View className="flex-row justify-between mt-2">
                 <View>
                     <View className="flex-row items-center gap-1"><IconLabel icon="dot-red" size={10} /><Text className="text-rose-400 text-xs">{t('calculators.break_even.loss')}</Text></View>
-                    <Text className="text-gray-500 text-xs">0 - {breakEvenUnits.toLocaleString()} {t('calculators.units')}</Text>
+                    <Text className="text-gray-400 text-xs">0 - {breakEvenUnits.toLocaleString()} {t('calculators.units')}</Text>
                 </View>
                 <View className="items-center">
                     <View className="flex-row items-center gap-1"><IconLabel icon="flash" size={14} color="#FDBA74" /><Text className="text-white text-xs font-bold">{t('calculators.break_even.break_even')}</Text></View>
-                    <Text className="text-gray-500 text-xs">{breakEvenUnits.toLocaleString()} {t('calculators.units')}</Text>
+                    <Text className="text-gray-400 text-xs">{breakEvenUnits.toLocaleString()} {t('calculators.units')}</Text>
                 </View>
                 <View className="items-end">
                     <View className="flex-row items-center gap-1"><IconLabel icon="dot-green" size={10} /><Text className="text-emerald-400 text-xs">{t('calculators.break_even.profit')}</Text></View>
-                    <Text className="text-gray-500 text-xs">{breakEvenUnits.toLocaleString()}+ {t('calculators.units')}</Text>
+                    <Text className="text-gray-400 text-xs">{breakEvenUnits.toLocaleString()}+ {t('calculators.units')}</Text>
                 </View>
             </View>
         </GlassCard>

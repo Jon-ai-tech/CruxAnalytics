@@ -24,7 +24,7 @@ function InputField({
         <View className="mb-4">
             <Text className="text-gray-300 font-medium mb-2">{label}</Text>
             <View className="flex-row items-center bg-slate-800 rounded-xl border border-white/10 overflow-hidden">
-                {prefix && <Text className="text-gray-500 pl-4">{prefix}</Text>}
+                {prefix && <Text className="text-gray-400 pl-4">{prefix}</Text>}
                 <TextInput
                     className="flex-1 px-4 py-3 text-white text-lg"
                     value={value}
@@ -32,9 +32,9 @@ function InputField({
                     placeholderTextColor="#6b7280"
                     keyboardType="numeric"
                 />
-                {suffix && <Text className="text-gray-500 pr-4">{suffix}</Text>}
+                {suffix && <Text className="text-gray-400 pr-4">{suffix}</Text>}
             </View>
-            {hint && <Text className="text-gray-500 text-xs mt-1">{hint}</Text>}
+            {hint && <Text className="text-gray-400 text-xs mt-1">{hint}</Text>}
         </View>
     );
 }
@@ -55,7 +55,7 @@ function PriceStrategyCard({
             )}
             <Text className="text-gray-400 text-sm">{strategy}</Text>
             <Text className="text-2xl font-bold text-white">${price != null ? price.toFixed(2) : '0.00'}</Text>
-            <Text className="text-gray-500 text-xs mt-2">{benefits}</Text>
+            <Text className="text-gray-400 text-xs mt-2">{benefits}</Text>
         </GlassCard>
     );
 }
