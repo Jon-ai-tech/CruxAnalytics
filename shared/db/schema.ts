@@ -1,4 +1,4 @@
-import { mysqlTable, varchar, text, json, timestamp, int, decimal, index } from 'drizzle-orm/mysql-core';
+import { mysqlTable, varchar, text, json, timestamp, int, decimal, index, boolean, mysqlEnum } from 'drizzle-orm/mysql-core';
 
 /**
  * Financial results type for projects and scenarios
@@ -72,3 +72,37 @@ export const scenarios = mysqlTable('scenarios', {
 
 export type Scenario = typeof scenarios.$inferSelect;
 export type InsertScenario = typeof scenarios.$inferInsert;
+
+/**
+ * AI Analysis Logs - stores reasoning logs from every AI insight generation.
+ * visibleToJon = true by default so Jon can audit all AI decisions.
+ * retentionTier controls archival: recent (0-90d) | summary (91-365d) | archived (>1y)
+ */
+export const aiAnalysisLogs = mysqlTable('ai_analysis_logs', {
+  id: varchar('id', { length: 36 }).primaryKey(),
+  projectId: varchar('project_id', { length: 36 }).notNull(),
+  userId: int('user_id').notNull(),
+  /** Raw prompt sent to the AI */
+  prompt: text('prompt').notNull(),
+  /** Full AI response text */
+  response: text('response').notNull(),
+  /** Structured conclusions extracted from the response */
+  conclusions: json('conclusions').$type<string[]>(),
+  /** Micro-feedback from Jon: validate / reject / pending */
+  feedback: mysqlEnum('feedback', ['pending', 'validated', 'rejected']).default('pending').notNull(),
+  /** Optional note attached when Jon rejects an analysis */
+  feedbackNote: text('feedback_note'),
+  /** Makes this log visible in Jon's dashboard */
+  visibleToJon: boolean('visible_to_jon').default(true).notNull(),
+  /** Retention tier for archival policy */
+  retentionTier: mysqlEnum('retention_tier', ['recent', 'summary', 'archived']).default('recent').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => ({
+  projectIdIdx: index('al_project_id_idx').on(table.projectId),
+  userIdIdx: index('al_user_id_idx').on(table.userId),
+  feedbackIdx: index('al_feedback_idx').on(table.feedback),
+  createdAtIdx: index('al_created_at_idx').on(table.createdAt),
+}));
+
+export type AiAnalysisLog = typeof aiAnalysisLogs.$inferSelect;
+export type InsertAiAnalysisLog = typeof aiAnalysisLogs.$inferInsert;
